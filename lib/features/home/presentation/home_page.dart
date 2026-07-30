@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/app_theme.dart';
 import '../../../shared/design_system/app_spacing.dart';
+import '../application/home_category_selection.dart';
 import '../application/homepage_provider.dart';
 import '../domain/homepage.dart';
 import 'widgets/home_category_rail.dart';
@@ -19,8 +20,30 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  String? _selectedTabId;
   bool _isRefreshing = false;
+  late final ScrollController _scrollController;
+  late final ValueNotifier<double> _headerSurfaceOpacity;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()..addListener(_handleScroll);
+    _headerSurfaceOpacity = ValueNotifier<double>(0);
+  }
+
+  void _handleScroll() {
+    final progress = (_scrollController.offset / 64).clamp(0.0, 1.0);
+    _headerSurfaceOpacity.value = progress * 0.96;
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_handleScroll)
+      ..dispose();
+    _headerSurfaceOpacity.dispose();
+    super.dispose();
+  }
 
   Future<void> _refreshHomepage() async {
     if (_isRefreshing) {
@@ -41,6 +64,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     final topInset = MediaQuery.paddingOf(context).top + 76;
     final homepage = ref.watch(homepageProvider);
+    final selectedTabId = ref.watch(homeCategorySelectionProvider);
     return ColoredBox(
       color: AppTheme.paper,
       child: Stack(
@@ -56,10 +80,24 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               data: (value) => _HomepageFeed(
                 homepage: value,
-                selectedTabId: _selectedTabId,
+                selectedTabId: selectedTabId,
                 topInset: topInset,
-                onSelected: (id) => setState(() => _selectedTabId = id),
+                scrollController: _scrollController,
+                onSelected: (id) {
+                  ref.read(homeCategorySelectionProvider.notifier).select(id);
+                  if (_scrollController.hasClients) {
+                    _scrollController.jumpTo(0);
+                  }
+                },
                 onRefresh: _refreshHomepage,
+                onArticleSelected: (slug) {
+                  context.push('/articles/${Uri.encodeComponent(slug)}');
+                },
+                onCategoryMore: (slug) {
+                  context.push(
+                    '/categories/${Uri.encodeComponent(slug)}/articles',
+                  );
+                },
               ),
             ),
           ),
@@ -67,7 +105,16 @@ class _HomePageState extends ConsumerState<HomePage> {
             left: 0,
             top: 0,
             right: 0,
-            child: HomeFloatingHeader(onSearch: () {}, onNotifications: () {}),
+            child: ValueListenableBuilder<double>(
+              valueListenable: _headerSurfaceOpacity,
+              builder: (context, opacity, child) {
+                return HomeFloatingHeader(
+                  onSearch: () {},
+                  onNotifications: () {},
+                  surfaceOpacity: opacity,
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -80,15 +127,21 @@ class _HomepageFeed extends StatelessWidget {
     required this.homepage,
     required this.selectedTabId,
     required this.topInset,
+    required this.scrollController,
     required this.onSelected,
     required this.onRefresh,
+    required this.onArticleSelected,
+    required this.onCategoryMore,
   });
 
   final Homepage homepage;
   final String? selectedTabId;
   final double topInset;
+  final ScrollController scrollController;
   final ValueChanged<String> onSelected;
   final Future<void> Function() onRefresh;
+  final ValueChanged<String> onArticleSelected;
+  final ValueChanged<String> onCategoryMore;
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +149,7 @@ class _HomepageFeed extends StatelessWidget {
     if (allTabs.isEmpty) {
       return _AdaptiveRefreshScrollView(
         onRefresh: onRefresh,
+        controller: scrollController,
         slivers: [
           SliverPadding(
             padding: EdgeInsets.only(top: topInset),
@@ -123,11 +177,12 @@ class _HomepageFeed extends StatelessWidget {
 
     return _AdaptiveRefreshScrollView(
       onRefresh: onRefresh,
+      controller: scrollController,
       scrollKey: PageStorageKey(selected.id),
       slivers: [
         SliverToBoxAdapter(child: SizedBox(height: topInset + AppSpacing.md)),
         if (lead != null)
-          _sectionSliver(lead, topPadding: 0)
+          _sectionSliver(lead, category: selected, topPadding: 0)
         else
           const SliverToBoxAdapter(child: SizedBox.shrink()),
         SliverToBoxAdapter(
@@ -149,7 +204,8 @@ class _HomepageFeed extends StatelessWidget {
             ),
           )
         else
-          for (final section in remainingSections) _sectionSliver(section),
+          for (final section in remainingSections)
+            _sectionSliver(section, category: selected),
         const SliverToBoxAdapter(child: SizedBox(height: 128)),
       ],
     );
@@ -157,6 +213,7 @@ class _HomepageFeed extends StatelessWidget {
 
   SliverToBoxAdapter _sectionSliver(
     HomeSection section, {
+    required HomeCategory category,
     double topPadding = AppSpacing.lg,
   }) {
     return SliverToBoxAdapter(
@@ -166,6 +223,8 @@ class _HomepageFeed extends StatelessWidget {
         child: HomeSectionRenderer(
           section: section,
           onCategorySelected: onSelected,
+          onArticleSelected: onArticleSelected,
+          onMore: () => onCategoryMore(category.slug),
         ),
       ),
     );
@@ -175,40 +234,35 @@ class _HomepageFeed extends StatelessWidget {
 class _AdaptiveRefreshScrollView extends StatelessWidget {
   const _AdaptiveRefreshScrollView({
     required this.onRefresh,
+    required this.controller,
     required this.slivers,
     this.scrollKey,
   });
 
   final Future<void> Function() onRefresh;
+  final ScrollController controller;
   final List<Widget> slivers;
   final Key? scrollKey;
 
   @override
   Widget build(BuildContext context) {
-    if (Theme.of(context).platform == TargetPlatform.iOS) {
-      return KeyedSubtree(
-        key: const ValueKey('home-cupertino-refresh-control'),
-        child: CustomScrollView(
-          key: scrollKey,
-          physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics(),
-          ),
-          slivers: [
-            CupertinoSliverRefreshControl(onRefresh: onRefresh),
-            ...slivers,
-          ],
-        ),
-      );
-    }
-
-    return RefreshIndicator(
-      key: const ValueKey('home-material-refresh-control'),
+    final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+    final safeTop = MediaQuery.paddingOf(context).top;
+    return RefreshIndicator.adaptive(
+      key: const ValueKey('home-adaptive-refresh-control'),
       color: AppTheme.brandRed,
       backgroundColor: AppTheme.paper,
+      edgeOffset: safeTop + 50,
+      displacement: safeTop + 70,
       onRefresh: onRefresh,
       child: CustomScrollView(
         key: scrollKey,
-        physics: const AlwaysScrollableScrollPhysics(),
+        controller: controller,
+        physics: isIOS
+            ? const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              )
+            : const AlwaysScrollableScrollPhysics(),
         slivers: slivers,
       ),
     );

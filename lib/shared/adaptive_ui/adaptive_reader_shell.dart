@@ -9,12 +9,14 @@ class ReaderNavigationItem {
     required this.icon,
     required this.symbol,
     required this.selectedSymbol,
+    required this.iosAssetIcon,
   });
 
   final String label;
   final List<List<dynamic>> icon;
   final String symbol;
   final String selectedSymbol;
+  final String iosAssetIcon;
 }
 
 class AdaptiveReaderShell extends StatelessWidget {
@@ -48,6 +50,7 @@ class AdaptiveReaderShell extends StatelessWidget {
                   icon: item.symbol,
                   selectedIcon: item.selectedSymbol,
                   label: item.label,
+                  iosAssetIcon: item.iosAssetIcon,
                 ),
               )
               .toList(growable: false),

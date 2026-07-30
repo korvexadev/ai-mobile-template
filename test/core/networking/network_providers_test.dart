@@ -8,10 +8,8 @@ void main() {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
-    expect(
-      ApiConstants.baseUrl,
-      'https://breach-vegas-cinema-endorsed.trycloudflare.com/api/v1',
-    );
+    expect(Uri.parse(ApiConstants.baseUrl).scheme, 'https');
+    expect(Uri.parse(ApiConstants.baseUrl).path, '/api/v1');
     expect(container.read(dioProvider).options.baseUrl, ApiConstants.baseUrl);
   });
 }

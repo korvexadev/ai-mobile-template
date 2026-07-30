@@ -105,13 +105,17 @@ Cross-feature imports go through public domain/application interfaces. Promote c
 - Keep homepage card geometry in `HomeLayout`: the horizontal content inset is
   8, large card radius is 12, and nested image radius is 8 unless a native
   control shape has stronger platform semantics.
-- The homepage header is a fully transparent overlay with the logo only.
-  Refresh is pull-only: use the Cupertino sliver control on iOS and the
-  platform Material control elsewhere, prevent duplicates, and reconcile the
-  full authoritative REST snapshot.
+- The homepage header is a transparent overlay with the logo only and visible
+  contained actions. Fade its paper surface in as content scrolls beneath it.
+  Refresh is pull-only: use `RefreshIndicator.adaptive`, prevent duplicate
+  requests, and reconcile the full authoritative REST snapshot.
 - Large story cards draw copy over a continuous image gradient, never a solid
   text panel. Multi-story banners and horizontal sections keep the next card
   visibly peeking into the viewport and take their heights from `HomeLayout`.
+- Horizontal-list cards are compact 16:9 media with category/publication
+  metadata and the title below. They never reuse banner geometry. A populated
+  section exposes More only when it contains more than five resolved stories,
+  and that action reads the backend category feed by stable slug.
 - Shared controls avoid Material ink and elevation effects. Prefer restrained
   Cupertino press behavior and common HugeIcons so Android and iOS retain one
   calm, iOS-leaning visual language.
@@ -126,6 +130,13 @@ Cross-feature imports go through public domain/application interfaces. Promote c
   must make selection an explicit, tested part of their reader behavior.
   Exclude control labels only when selection interferes with the control
   gesture.
+- Article detail reads the authenticated reader endpoint by stable slug and
+  renders the returned section array exactly in server order. Markdown remains
+  selectable; images retain captions and alternative text; YouTube plays
+  inline through the privacy-enhanced player; advert placement codes remain
+  labelled slots until an ad-decision contract supplies creative content.
+- Render backend-ranked similar stories with their normalized score and
+  category; never recompute recommendation order in the client.
 
 ## Local development topology
 

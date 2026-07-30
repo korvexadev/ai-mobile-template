@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:hugeicons/styles/stroke_rounded.dart';
+import '../../../../app/theme/app_theme.dart';
 import '../../../../shared/design_system/app_spacing.dart';
 import '../../../../shared/design_system/mikozi_brand.dart';
 
@@ -10,43 +11,57 @@ class HomeFloatingHeader extends StatelessWidget {
   const HomeFloatingHeader({
     required this.onSearch,
     required this.onNotifications,
+    required this.surfaceOpacity,
     super.key,
   });
 
   final VoidCallback onSearch;
   final VoidCallback onNotifications;
+  final double surfaceOpacity;
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      bottom: false,
-      child: SizedBox(
-        height: 76,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: HomeLayout.horizontalPadding,
-          ),
-          child: Row(
-            children: [
-              const Expanded(
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: MikoziBrand(logoSize: 42, showName: false),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        // gradient: LinearGradient(
+        //   begin: Alignment.topCenter,
+        //   end: Alignment.bottomCenter,
+        //   colors: [
+        //     AppTheme.paper.withValues(alpha: surfaceOpacity),
+        //     AppTheme.paper.withValues(alpha: surfaceOpacity * 0.92),
+        //   ],
+        // ),
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: SizedBox(
+          height: 76,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: HomeLayout.horizontalPadding,
+            ),
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: MikoziBrand(logoSize: 42, showName: false),
+                  ),
                 ),
-              ),
-              _FloatingHeaderAction(
-                label: 'Search',
-                icon: HugeIconsStrokeRounded.search01,
-                onPressed: onSearch,
-              ),
-              const SizedBox(width: AppSpacing.xs),
-              _FloatingHeaderAction(
-                label: 'Notifications',
-                icon: HugeIconsStrokeRounded.notification02,
-                showBadge: true,
-                onPressed: onNotifications,
-              ),
-            ],
+                _FloatingHeaderAction(
+                  label: 'Search',
+                  icon: HugeIconsStrokeRounded.search01,
+                  onPressed: onSearch,
+                ),
+                const SizedBox(width: AppSpacing.xs),
+                _FloatingHeaderAction(
+                  label: 'Notifications',
+                  icon: HugeIconsStrokeRounded.notification02,
+                  showBadge: true,
+                  onPressed: onNotifications,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -72,30 +87,44 @@ class _FloatingHeaderAction extends StatelessWidget {
     return Semantics(
       label: label,
       button: true,
-      child: CupertinoButton(
-        padding: EdgeInsets.zero,
-        minimumSize: const Size.square(44),
-        pressedOpacity: 0.58,
-        onPressed: onPressed,
-        child: SizedBox.square(
-          dimension: 44,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              HugeIcon(icon: icon, color: CupertinoColors.label, size: 21),
-              if (showBadge)
-                const Positioned(
-                  right: 9,
-                  top: 8,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: CupertinoColors.systemRed,
-                      shape: BoxShape.circle,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: AppTheme.white.withValues(alpha: 0.92),
+          shape: BoxShape.circle,
+          border: Border.all(color: AppTheme.border),
+          boxShadow: [
+            BoxShadow(
+              color: CupertinoColors.black.withValues(alpha: 0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: CupertinoButton(
+          padding: EdgeInsets.zero,
+          minimumSize: const Size.square(44),
+          pressedOpacity: 0.58,
+          onPressed: onPressed,
+          child: SizedBox.square(
+            dimension: 44,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                HugeIcon(icon: icon, color: CupertinoColors.label, size: 21),
+                if (showBadge)
+                  const Positioned(
+                    right: 9,
+                    top: 8,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: CupertinoColors.systemRed,
+                        shape: BoxShape.circle,
+                      ),
+                      child: SizedBox.square(dimension: 7),
                     ),
-                    child: SizedBox.square(dimension: 7),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

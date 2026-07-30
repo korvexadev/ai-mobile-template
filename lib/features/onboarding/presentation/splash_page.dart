@@ -1,6 +1,5 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/theme/app_theme.dart';
@@ -19,12 +18,12 @@ class SplashPage extends ConsumerWidget {
 
     return AdaptiveScaffold(
       body: ColoredBox(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: AppTheme.paper,
         child: SafeArea(
           child: Stack(
             fit: StackFit.expand,
             children: [
-              const Center(child: MikoziBrand(logoSize: 112, showName: false)),
+              const Center(child: MikoziBrand(logoSize: 92, showName: false)),
               Positioned(
                 left: 40,
                 right: 40,

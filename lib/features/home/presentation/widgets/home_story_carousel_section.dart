@@ -4,13 +4,20 @@ import '../../../../shared/design_system/app_spacing.dart';
 import '../../domain/homepage.dart';
 import '../home_layout.dart';
 import 'home_article_image.dart';
+import 'home_article_meta.dart';
 import 'home_section_heading.dart';
-import 'home_story_gradient.dart';
 
 class HomeStoryCarouselSection extends StatelessWidget {
-  const HomeStoryCarouselSection({required this.section, super.key});
+  const HomeStoryCarouselSection({
+    required this.section,
+    required this.onArticleSelected,
+    required this.onMore,
+    super.key,
+  });
 
   final HomeSection section;
+  final ValueChanged<String> onArticleSelected;
+  final VoidCallback? onMore;
 
   @override
   Widget build(BuildContext context) {
@@ -20,15 +27,17 @@ class HomeStoryCarouselSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HomeSectionHeading(title: section.title),
+        HomeSectionHeading(title: section.title, onMore: onMore),
         const SizedBox(height: AppSpacing.sm),
         LayoutBuilder(
           builder: (context, constraints) {
-            final hasMultipleStories = section.articles.length > 1;
+            final availableWidth =
+                constraints.maxWidth - (HomeLayout.horizontalPadding * 2);
             final cardWidth =
-                constraints.maxWidth -
-                (HomeLayout.horizontalPadding * 2) -
-                (hasMultipleStories ? HomeLayout.trailingCardPeek : 0);
+                (availableWidth * HomeLayout.horizontalCardWidthFactor).clamp(
+                  216.0,
+                  HomeLayout.horizontalCardMaxWidth,
+                );
             return SizedBox(
               height: HomeLayout.carouselCardHeight,
               child: ListView.separated(
@@ -45,6 +54,9 @@ class HomeStoryCarouselSection extends StatelessWidget {
                   return _CarouselStoryCard(
                     article: section.articles[index],
                     width: cardWidth,
+                    onPressed: () {
+                      onArticleSelected(section.articles[index].slug);
+                    },
                   );
                 },
               ),
@@ -57,23 +69,50 @@ class HomeStoryCarouselSection extends StatelessWidget {
 }
 
 class _CarouselStoryCard extends StatelessWidget {
-  const _CarouselStoryCard({required this.article, required this.width});
+  const _CarouselStoryCard({
+    required this.article,
+    required this.width,
+    required this.onPressed,
+  });
 
   final HomeArticle article;
   final double width;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(HomeLayout.cardRadius),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            HomeArticleImage(article: article, borderRadius: BorderRadius.zero),
-            HomeStoryGradient(article: article),
-          ],
+    return Semantics(
+      button: true,
+      label: article.title,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onPressed,
+        child: SizedBox(
+          width: width,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AspectRatio(
+                aspectRatio: HomeLayout.horizontalImageAspectRatio,
+                child: HomeArticleImage(
+                  article: article,
+                  borderRadius: BorderRadius.circular(HomeLayout.imageRadius),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              HomeArticleMeta(article: article),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                article.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  height: 1.2,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

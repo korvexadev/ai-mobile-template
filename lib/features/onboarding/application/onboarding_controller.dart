@@ -1,16 +1,11 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/persistence/preferences_provider.dart';
 import '../data/preferences_onboarding_repository.dart';
 import '../domain/onboarding_repository.dart';
 import '../domain/onboarding_status.dart';
 
 part 'onboarding_controller.g.dart';
-
-@Riverpod(keepAlive: true)
-SharedPreferencesAsync sharedPreferences(Ref ref) {
-  return SharedPreferencesAsync();
-}
 
 @Riverpod(keepAlive: true)
 OnboardingRepository onboardingRepository(Ref ref) {

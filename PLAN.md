@@ -81,9 +81,9 @@ the shared contract-first loop in `../backend/docs/DELIVERY_WORKFLOW.md`.
 
 ## 3. Newsroom publishing
 
-- [ ] `in_progress` Build the configurable category homepage from the public
-      REST snapshot; top/latest feeds and public article detail remain pending.
-      published revisions, author, timestamp, correction, and sponsorship metadata.
+- [ ] `in_progress` Build the configurable category homepage and authenticated
+      article reader from REST; top/latest feeds, correction, and sponsorship
+      metadata remain pending.
 - [x] `done` Wire the real homepage into the reader shell and translate
       `home.png` into pinned actions, immersive banners, compact story rows,
       category pills, carousels, adverts, and floating navigation without
@@ -99,6 +99,31 @@ the shared contract-first loop in `../backend/docs/DELIVERY_WORKFLOW.md`.
       adaptive pull gestures, introduce taller gradient-overlay story cards
       with trailing carousel peeks, and remove Material ink effects from
       shared controls.
+- [x] `done` Distinguish the More-category sheet, fade the floating header as
+      content scrolls beneath it, and standardize pull refresh on
+      `RefreshIndicator.adaptive`.
+- [x] `done` Add authenticated slug-based article reading with ordered
+      selectable Markdown, responsive images and captions, inline
+      privacy-enhanced YouTube playback, summaries, bylines, advert slots,
+      stable errors, and refresh.
+- [x] `done` Render horizontal lists as compact 16:9 cards with metadata below,
+      expose section More for more than five resolved stories, page the
+      backend-owned category feed, and render server-scored similar stories.
+- [x] `done` Keep article navigation fully transparent, add cache-only native
+      image sharing and local article bookmarks, use one bounded image cache
+      throughout the reader, and redesign More categories as an anchored,
+      spacious action sheet.
+- [x] `done` Keep More-category selection for the in-memory application
+      session, harden cached image requests for CDN and relative media URLs,
+      auto-advance multi-story banners through an infinite carousel, expose
+      the Saved feed, and translate the profile reference into reader settings.
+- [x] `done` Make the light launch experience deterministic in OS dark mode,
+      route every reader-tab destination, keep a selected More category at the
+      front of the rail, and prevent Saved-feed rendering from consuming
+      backend article reads.
+- [x] `done` Group local bookmarks by their actual save date, retain concise
+      article snapshots with hero/inline-image fallback, and mirror the proven
+      ChanguFood iOS 26 in-place native tab shell with Mikozi HugeIcon assets.
 - [ ] `pending` Handle publication updates as hints and reconcile through REST
       when sockets or push are introduced.
 - [ ] `pending` Pass the shared publish-and-read journey with backend/dashboard.
@@ -115,6 +140,8 @@ the shared contract-first loop in `../backend/docs/DELIVERY_WORKFLOW.md`.
   dark mode, text scaling, and semantic advertisement labels are supported.
 - Category and article navigation use stable slugs when their detail routes are
   introduced; database IDs remain opaque transport identity.
+- Article detail consumes `GET /api/v1/reader/articles/slug/:slug` and renders
+  every supported section in the exact array order returned by the backend.
 
 ## 4. Reader discovery and audience preferences
 

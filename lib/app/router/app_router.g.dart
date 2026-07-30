@@ -13,6 +13,11 @@ List<RouteBase> get $appRoutes => [
   $otpRoute,
   $completeProfileRoute,
   $homeRoute,
+  $latestRoute,
+  $savedRoute,
+  $profileRoute,
+  $articleRoute,
+  $categoryArticlesRoute,
 ];
 
 RouteBase get $splashRoute => GoRouteData.$route(
@@ -158,6 +163,147 @@ mixin $HomeRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/home');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $latestRoute => GoRouteData.$route(
+  path: '/latest',
+  hasOverriddenOnExit: false,
+  factory: $LatestRoute._fromState,
+);
+
+mixin $LatestRoute on GoRouteData {
+  static LatestRoute _fromState(GoRouterState state) => const LatestRoute();
+
+  @override
+  String get location => GoRouteData.$location('/latest');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $savedRoute => GoRouteData.$route(
+  path: '/saved',
+  hasOverriddenOnExit: false,
+  factory: $SavedRoute._fromState,
+);
+
+mixin $SavedRoute on GoRouteData {
+  static SavedRoute _fromState(GoRouterState state) => const SavedRoute();
+
+  @override
+  String get location => GoRouteData.$location('/saved');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $profileRoute => GoRouteData.$route(
+  path: '/profile',
+  hasOverriddenOnExit: false,
+  factory: $ProfileRoute._fromState,
+);
+
+mixin $ProfileRoute on GoRouteData {
+  static ProfileRoute _fromState(GoRouterState state) => const ProfileRoute();
+
+  @override
+  String get location => GoRouteData.$location('/profile');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $articleRoute => GoRouteData.$route(
+  path: '/articles/:slug',
+  hasOverriddenOnExit: false,
+  factory: $ArticleRoute._fromState,
+);
+
+mixin $ArticleRoute on GoRouteData {
+  static ArticleRoute _fromState(GoRouterState state) =>
+      ArticleRoute(slug: state.pathParameters['slug']!);
+
+  ArticleRoute get _self => this as ArticleRoute;
+
+  @override
+  String get location =>
+      GoRouteData.$location('/articles/${Uri.encodeComponent(_self.slug)}');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $categoryArticlesRoute => GoRouteData.$route(
+  path: '/categories/:categorySlug/articles',
+  hasOverriddenOnExit: false,
+  factory: $CategoryArticlesRoute._fromState,
+);
+
+mixin $CategoryArticlesRoute on GoRouteData {
+  static CategoryArticlesRoute _fromState(GoRouterState state) =>
+      CategoryArticlesRoute(
+        categorySlug: state.pathParameters['categorySlug']!,
+      );
+
+  CategoryArticlesRoute get _self => this as CategoryArticlesRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/categories/${Uri.encodeComponent(_self.categorySlug)}/articles',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

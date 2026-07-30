@@ -44,6 +44,7 @@ class RemoteHomepageRepository implements HomepageRepository {
         'categories' => HomeSectionType.categories,
         _ => HomeSectionType.list,
       },
+      itemLimit: json['itemLimit'] as int? ?? 1,
       advertPlacementCode: json['advertPlacementCode'] as String?,
       articles: (json['articles'] as List<dynamic>? ?? const [])
           .map((item) => _article(item as Map<String, dynamic>))

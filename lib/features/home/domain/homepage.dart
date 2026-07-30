@@ -40,11 +40,13 @@ class HomeSection {
     required this.advertPlacementCode,
     required this.articles,
     required this.categories,
+    this.itemLimit = 1,
   });
 
   final String id;
   final String? title;
   final HomeSectionType type;
+  final int itemLimit;
   final String? advertPlacementCode;
   final List<HomeArticle> articles;
   final List<HomeCategory> categories;

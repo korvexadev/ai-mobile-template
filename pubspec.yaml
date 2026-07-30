@@ -43,6 +43,12 @@ dependencies:
   hugeicons: ^1.1.7
   riverpod_annotation: 4.0.3
   shared_preferences: ^2.5.5
+  flutter_markdown_plus: ^1.0.12
+  youtube_player_iframe: ^6.0.2
+  url_launcher: ^6.3.2
+  cached_network_image: ^3.4.1
+  flutter_cache_manager: ^3.4.2
+  share_plus: ^13.3.0
 
 dev_dependencies:
   flutter_test:
@@ -80,7 +86,7 @@ flutter:
 
 flutter_native_splash:
   color: '#FAF9F6'
-  color_dark: '#111214'
+  color_dark: '#FAF9F6'
   image: assets/brand/mikozi-logo.png
   image_dark: assets/brand/mikozi-logo.png
   android: true
@@ -88,7 +94,7 @@ flutter_native_splash:
   web: false
   android_12:
     color: '#FAF9F6'
-    color_dark: '#111214'
+    color_dark: '#FAF9F6'
     image: assets/brand/mikozi-logo.png
     image_dark: assets/brand/mikozi-logo.png
 

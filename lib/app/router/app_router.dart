@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../features/articles/presentation/article_detail_page.dart';
 import '../../features/auth/application/auth_controller.dart';
 import '../../features/auth/application/auth_flow_state.dart';
 import '../../features/auth/presentation/complete_profile_page.dart';
 import '../../features/auth/presentation/login_page.dart';
 import '../../features/auth/presentation/otp_page.dart';
+import '../../features/home/presentation/category_articles_page.dart';
 import '../../features/home/presentation/reader_shell_page.dart';
 import '../../features/onboarding/application/onboarding_controller.dart';
 import '../../features/onboarding/domain/onboarding_status.dart';
@@ -61,6 +63,15 @@ String? _redirect(Ref ref, GoRouterState state) {
     AuthStage.savingProfile => const CompleteProfileRoute().location,
     AuthStage.authenticated => const HomeRoute().location,
   };
+  if (flow.stage == AuthStage.authenticated &&
+      (location == const HomeRoute().location ||
+          location == const LatestRoute().location ||
+          location == const SavedRoute().location ||
+          location == const ProfileRoute().location ||
+          location.startsWith('/articles/') ||
+          location.startsWith('/categories/'))) {
+    return null;
+  }
   return location == target ? null : target;
 }
 
@@ -124,7 +135,73 @@ class HomeRoute extends GoRouteData with $HomeRoute {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return _page(state, const ReaderShellPage());
+    return _page(
+      state,
+      const ReaderShellPage(destination: ReaderDestination.home),
+    );
+  }
+}
+
+@TypedGoRoute<LatestRoute>(path: '/latest')
+class LatestRoute extends GoRouteData with $LatestRoute {
+  const LatestRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _page(
+      state,
+      const ReaderShellPage(destination: ReaderDestination.latest),
+    );
+  }
+}
+
+@TypedGoRoute<SavedRoute>(path: '/saved')
+class SavedRoute extends GoRouteData with $SavedRoute {
+  const SavedRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _page(
+      state,
+      const ReaderShellPage(destination: ReaderDestination.saved),
+    );
+  }
+}
+
+@TypedGoRoute<ProfileRoute>(path: '/profile')
+class ProfileRoute extends GoRouteData with $ProfileRoute {
+  const ProfileRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _page(
+      state,
+      const ReaderShellPage(destination: ReaderDestination.profile),
+    );
+  }
+}
+
+@TypedGoRoute<ArticleRoute>(path: '/articles/:slug')
+class ArticleRoute extends GoRouteData with $ArticleRoute {
+  const ArticleRoute({required this.slug});
+
+  final String slug;
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _page(state, ArticleDetailPage(slug: slug));
+  }
+}
+
+@TypedGoRoute<CategoryArticlesRoute>(path: '/categories/:categorySlug/articles')
+class CategoryArticlesRoute extends GoRouteData with $CategoryArticlesRoute {
+  const CategoryArticlesRoute({required this.categorySlug});
+
+  final String categorySlug;
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _page(state, CategoryArticlesPage(categorySlug: categorySlug));
   }
 }
 

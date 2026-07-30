@@ -7,6 +7,7 @@ import '../data/auth_session_store.dart';
 import '../data/remote_auth_repository.dart';
 import '../domain/auth_failure.dart';
 import '../domain/auth_repository.dart';
+import '../domain/auth_session.dart';
 import '../domain/phone_number.dart';
 import 'auth_flow_state.dart';
 
@@ -180,6 +181,29 @@ class AuthController extends _$AuthController {
   Future<void> signOut() async {
     await ref.read(authRepositoryProvider).clearSession();
     state = const AsyncData(AuthFlowState.signedOut());
+  }
+
+  Future<AuthSession?> validSession() async {
+    final session = _current.session;
+    final now = DateTime.now().toUtc();
+    if (session != null && session.tokens.accessIsValidAt(now)) {
+      return session;
+    }
+
+    final restored = await ref.read(authRepositoryProvider).restore();
+    if (restored == null) {
+      state = const AsyncData(AuthFlowState.signedOut());
+      return null;
+    }
+    state = AsyncData(
+      AuthFlowState(
+        stage: restored.needsName
+            ? AuthStage.completingProfile
+            : AuthStage.authenticated,
+        session: restored,
+      ),
+    );
+    return restored;
   }
 
   MalawiPhoneNumber? _phoneNumber(String input) {

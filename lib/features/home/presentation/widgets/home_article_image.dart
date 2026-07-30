@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hugeicons/hugeicons.dart';
-import 'package:hugeicons/styles/stroke_rounded.dart';
-import '../../../../app/theme/app_theme.dart';
+import '../../../../shared/widgets/mikozi_cached_network_image.dart';
 import '../../domain/homepage.dart';
 
 class HomeArticleImage extends StatelessWidget {
@@ -21,34 +19,21 @@ class HomeArticleImage extends StatelessWidget {
     return ClipRRect(
       borderRadius: borderRadius,
       child: article.heroImageUrl == null
-          ? const _ImageFallback(icon: HugeIconsStrokeRounded.imageNotFound01)
-          : Image.network(
-              article.heroImageUrl!,
+          ? const _ImageFallback()
+          : MikoziCachedNetworkImage(
+              url: article.heroImageUrl!,
               fit: fit,
               semanticLabel: article.title,
-              filterQuality: FilterQuality.medium,
-              errorBuilder: (context, error, stackTrace) {
-                return const _ImageFallback(
-                  icon: HugeIconsStrokeRounded.imageNotFound01,
-                );
-              },
             ),
     );
   }
 }
 
 class _ImageFallback extends StatelessWidget {
-  const _ImageFallback({required this.icon});
-
-  final List<List<dynamic>> icon;
+  const _ImageFallback();
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: AppTheme.softSurface,
-      child: Center(
-        child: HugeIcon(icon: icon, color: AppTheme.muted, size: 28),
-      ),
-    );
+    return const MikoziCachedNetworkImage(url: '', semanticLabel: null);
   }
 }

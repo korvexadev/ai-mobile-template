@@ -14,12 +14,34 @@ Intentional packages:
 - `flutter_secure_storage`
 - `adaptive_platform_ui`
 - `hugeicons`
+- `flutter_markdown_plus`
+- `youtube_player_iframe`
+- `url_launcher`
+- `cached_network_image`, `flutter_cache_manager`
+- `share_plus`
 
 Packages are not the default solution. Flutter/Dart owns validation,
 formatting, spacing, theme components, animation, and the six-cell OTP input.
 Secure storage remains for the Keychain/Keystore boundary; HugeIcons is the
 reviewed cross-platform icon set; the vendored adaptive package owns native
 iOS 26 Liquid Glass components.
+The maintained Markdown parser renders the newsroom's GFM contract without
+allowing raw HTML; the iframe player owns YouTube's native platform-view and
+fullscreen integration; URL Launcher safely hands article links to the
+platform.
+
+Reader images use one bounded, 240-object disk cache with a 14-day stale
+window. Article sharing reads from that same cache without issuing a new image
+request; uncached images fall back to title-and-summary sharing. `share_plus`
+is retained only for the native Android/iOS share-sheet boundary.
+
+Saved articles currently persist stable slugs in shared preferences. This is a
+temporary local bookmark index, never a store for article bodies or session
+material.
+The Saved tab resolves those slugs through the authoritative article endpoint,
+so publication changes remain current. Homepage category selection is
+session-only Riverpod state: it survives tab and page reconstruction until the
+process ends, but is never written to local storage.
 
 ## Current reader journey
 
@@ -33,8 +55,9 @@ iOS 26 Liquid Glass components.
 - Shared feature behavior is platform-neutral. Route boundaries provide common
   theme and selection contracts, while adaptive controls render Material on
   Android and Cupertino on iOS.
-- The shell currently contains a dummy editorial homepage plus Latest, Saved,
-  and Profile destinations.
+- The shell contains the backend-configured editorial homepage, authenticated
+  slug-based article reading, a local Saved feed, and the reader profile and
+  settings destination. Latest remains a placeholder.
 
 ## API address
 
