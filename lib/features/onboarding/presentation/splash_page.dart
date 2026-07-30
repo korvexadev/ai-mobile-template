@@ -1,10 +1,12 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mikozi_mobile/app/theme/app_theme.dart';
-import 'package:mikozi_mobile/features/auth/application/auth_controller.dart';
-import 'package:mikozi_mobile/features/onboarding/application/onboarding_controller.dart';
-import 'package:mikozi_mobile/shared/design_system/mikozi_brand.dart';
+
+import '../../../app/theme/app_theme.dart';
+import '../../../shared/design_system/mikozi_brand.dart';
+import '../../auth/application/auth_controller.dart';
+import '../application/onboarding_controller.dart';
 
 class SplashPage extends ConsumerWidget {
   const SplashPage({super.key});
@@ -76,7 +78,11 @@ class _SplashRetry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: TextButton(onPressed: onRetry, child: const Text('Try again')),
+      child: CupertinoButton(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        onPressed: onRetry,
+        child: const Text('Try again'),
+      ),
     );
   }
 }

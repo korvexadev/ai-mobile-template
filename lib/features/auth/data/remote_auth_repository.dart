@@ -1,10 +1,10 @@
-import 'package:mikozi_mobile/features/auth/data/auth_api.dart';
-import 'package:mikozi_mobile/features/auth/data/auth_response_mapper.dart';
-import 'package:mikozi_mobile/features/auth/data/auth_session_store.dart';
-import 'package:mikozi_mobile/features/auth/domain/auth_failure.dart';
-import 'package:mikozi_mobile/features/auth/domain/auth_repository.dart';
-import 'package:mikozi_mobile/features/auth/domain/auth_session.dart';
-import 'package:mikozi_mobile/features/auth/domain/otp_challenge.dart';
+import '../domain/auth_failure.dart';
+import '../domain/auth_repository.dart';
+import '../domain/auth_session.dart';
+import '../domain/otp_challenge.dart';
+import 'auth_api.dart';
+import 'auth_response_mapper.dart';
+import 'auth_session_store.dart';
 
 class RemoteAuthRepository implements AuthRepository {
   RemoteAuthRepository(

@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:mikozi_mobile/features/auth/domain/auth_profile.dart';
-import 'package:mikozi_mobile/features/auth/domain/auth_session.dart';
+import '../domain/auth_profile.dart';
+import '../domain/auth_session.dart';
 
 abstract interface class AuthSessionStore {
   Future<AuthSession?> read();

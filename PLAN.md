@@ -84,6 +84,21 @@ the shared contract-first loop in `../backend/docs/DELIVERY_WORKFLOW.md`.
 - [ ] `in_progress` Build the configurable category homepage from the public
       REST snapshot; top/latest feeds and public article detail remain pending.
       published revisions, author, timestamp, correction, and sponsorship metadata.
+- [x] `done` Wire the real homepage into the reader shell and translate
+      `home.png` into pinned actions, immersive banners, compact story rows,
+      category pills, carousels, adverts, and floating navigation without
+      changing dashboard-resolved order.
+- [x] `done` Add visible manual and pull-to-refresh REST reconciliation for
+      dashboard changes, centralize homepage geometry at 8-point gutters and
+      12/8-point radii, and standardize relative project imports.
+- [x] `done` Centralize the physical-device HTTPS API origin and `/api/v1`
+      prefix in one constants file used by the shared Dio provider.
+- [x] `done` Apply the fast, reduced-motion-aware fade transition to every
+      typed application route.
+- [x] `done` Make the reader header transparent and logo-only, move refresh to
+      adaptive pull gestures, introduce taller gradient-overlay story cards
+      with trailing carousel peeks, and remove Material ink effects from
+      shared controls.
 - [ ] `pending` Handle publication updates as hints and reconcile through REST
       when sockets or push are introduced.
 - [ ] `pending` Pass the shared publish-and-read journey with backend/dashboard.

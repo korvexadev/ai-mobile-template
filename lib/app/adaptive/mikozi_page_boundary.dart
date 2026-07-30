@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mikozi_mobile/app/theme/app_theme.dart';
+import '../theme/app_theme.dart';
 
 /// Supplies the shared Flutter contracts used by every routed page.
 ///
@@ -14,7 +14,7 @@ class MikoziPageBoundary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: AppTheme.light,
+      data: AppTheme.light.copyWith(platform: Theme.of(context).platform),
       child: Material(
         type: MaterialType.transparency,
         child: SelectionArea(child: child),

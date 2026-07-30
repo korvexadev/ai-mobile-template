@@ -1,5 +1,5 @@
-import 'package:mikozi_mobile/features/auth/domain/auth_session.dart';
-import 'package:mikozi_mobile/features/auth/domain/otp_challenge.dart';
+import 'auth_session.dart';
+import 'otp_challenge.dart';
 
 abstract interface class AuthRepository {
   Future<AuthSession?> restore();

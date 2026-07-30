@@ -21,7 +21,7 @@ class MikoziBrand extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(logoSize * 0.28),
+            borderRadius: BorderRadius.circular(logoSize * 0.9),
             child: Image.asset(
               'assets/brand/mikozi-logo.png',
               width: logoSize,

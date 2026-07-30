@@ -1,10 +1,11 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:hugeicons/styles/stroke_rounded.dart';
-import 'package:mikozi_mobile/app/theme/app_theme.dart';
-import 'package:mikozi_mobile/shared/design_system/app_spacing.dart';
-import 'package:mikozi_mobile/shared/design_system/mikozi_brand.dart';
+import '../../../../app/theme/app_theme.dart';
+import '../../../../shared/design_system/app_spacing.dart';
+import '../../../../shared/design_system/mikozi_brand.dart';
 
 class AuthPageFrame extends StatelessWidget {
   const AuthPageFrame({
@@ -116,7 +117,7 @@ class _AuthHeader extends StatelessWidget {
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (onBack == null)
                 const MikoziBrand(logoSize: 38, foregroundColor: Colors.white)
@@ -127,6 +128,7 @@ class _AuthHeader extends StatelessWidget {
                 header: true,
                 child: Text(
                   title,
+                  textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
                     color: Colors.white,
                     fontFamily: 'Manrope',
@@ -139,6 +141,7 @@ class _AuthHeader extends StatelessWidget {
               const SizedBox(height: AppSpacing.sm),
               Text(
                 subtitle,
+                textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Colors.white.withValues(alpha: 0.72),
                 ),
@@ -163,11 +166,12 @@ class _BackButton extends StatelessWidget {
         shape: BoxShape.circle,
         border: Border.all(color: Colors.white.withValues(alpha: 0.22)),
       ),
-      child: IconButton(
-        tooltip: 'Back',
+      child: CupertinoButton(
+        padding: EdgeInsets.zero,
+        minimumSize: const Size.square(44),
+        pressedOpacity: 0.62,
         onPressed: onPressed,
-        color: Colors.white,
-        icon: const HugeIcon(
+        child: const HugeIcon(
           icon: HugeIconsStrokeRounded.arrowLeft01,
           size: 21,
           color: Colors.white,

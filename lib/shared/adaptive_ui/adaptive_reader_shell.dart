@@ -1,7 +1,7 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:mikozi_mobile/app/theme/app_theme.dart';
+import '../../app/theme/app_theme.dart';
 
 class ReaderNavigationItem {
   const ReaderNavigationItem({
@@ -55,6 +55,7 @@ class AdaptiveReaderShell extends StatelessWidget {
       );
     }
     return Scaffold(
+      extendBody: true,
       body: body,
       bottomNavigationBar: _FallbackBottomBar(
         items: items,
@@ -78,44 +79,66 @@ class _FallbackBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        color: AppTheme.white,
-        border: Border(top: BorderSide(color: AppTheme.border)),
-      ),
-      child: SafeArea(
-        top: false,
+    return SafeArea(
+      top: false,
+      minimum: const EdgeInsets.fromLTRB(8, 0, 8, 12),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: AppTheme.ink,
+          borderRadius: BorderRadius.circular(32),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.12),
+              blurRadius: 18,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
         child: SizedBox(
-          height: 68,
+          height: 66,
           child: Row(
             children: List.generate(items.length, (index) {
               final item = items[index];
               final selected = selectedIndex == index;
-              final color = selected ? AppTheme.brandRed : AppTheme.muted;
+              final color = selected ? AppTheme.white : const Color(0xFFB8B9BD);
               return Expanded(
-                child: InkResponse(
-                  onTap: () => onSelected(index),
-                  radius: 32,
+                child: Padding(
+                  padding: const EdgeInsets.all(6),
                   child: Semantics(
                     selected: selected,
                     button: true,
                     label: item.label,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        HugeIcon(icon: item.icon, size: 25, color: color),
-                        const SizedBox(height: 3),
-                        Text(
-                          item.label,
-                          style: Theme.of(context).textTheme.labelSmall
-                              ?.copyWith(
-                                color: color,
-                                fontWeight: selected
-                                    ? FontWeight.w700
-                                    : FontWeight.w600,
-                              ),
+                    onTap: () => onSelected(index),
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => onSelected(index),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 160),
+                        curve: Curves.easeOut,
+                        decoration: BoxDecoration(
+                          color: selected
+                              ? AppTheme.brandRed
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(28),
                         ),
-                      ],
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            HugeIcon(icon: item.icon, size: 23, color: color),
+                            const SizedBox(height: 2),
+                            Text(
+                              item.label,
+                              style: Theme.of(context).textTheme.labelSmall
+                                  ?.copyWith(
+                                    color: color,
+                                    fontWeight: selected
+                                        ? FontWeight.w700
+                                        : FontWeight.w600,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),

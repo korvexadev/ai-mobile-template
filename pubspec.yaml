@@ -77,9 +77,6 @@ flutter:
     - family: Manrope
       fonts:
         - asset: assets/fonts/Manrope-Variable.ttf
-    - family: Newsreader
-      fonts:
-        - asset: assets/fonts/Newsreader-Variable.ttf
 
 flutter_native_splash:
   color: '#FAF9F6'

@@ -2,12 +2,13 @@ import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mikozi_mobile/features/auth/application/auth_controller.dart';
-import 'package:mikozi_mobile/features/auth/application/auth_flow_state.dart';
-import 'package:mikozi_mobile/features/auth/presentation/widgets/auth_error_text.dart';
-import 'package:mikozi_mobile/features/auth/presentation/widgets/auth_page_frame.dart';
-import 'package:mikozi_mobile/shared/design_system/app_spacing.dart';
-import 'package:mikozi_mobile/shared/design_system/primary_action.dart';
+
+import '../../../shared/design_system/app_spacing.dart';
+import '../../../shared/design_system/primary_action.dart';
+import '../application/auth_controller.dart';
+import '../application/auth_flow_state.dart';
+import 'widgets/auth_error_text.dart';
+import 'widgets/auth_page_frame.dart';
 
 class CompleteProfilePage extends ConsumerStatefulWidget {
   const CompleteProfilePage({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mikozi_mobile/app/theme/app_theme.dart';
-import 'package:mikozi_mobile/shared/design_system/app_spacing.dart';
+import '../../../../app/theme/app_theme.dart';
+import '../../../../shared/design_system/app_spacing.dart';
 
 class AuthErrorText extends StatelessWidget {
   const AuthErrorText({required this.message, super.key});

@@ -1,13 +1,14 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mikozi_mobile/app/theme/app_theme.dart';
-import 'package:mikozi_mobile/features/onboarding/application/onboarding_controller.dart';
-import 'package:mikozi_mobile/features/onboarding/presentation/onboarding_slide.dart';
-import 'package:mikozi_mobile/features/onboarding/presentation/widgets/onboarding_artwork.dart';
-import 'package:mikozi_mobile/shared/design_system/mikozi_brand.dart';
-import 'package:mikozi_mobile/shared/design_system/primary_action.dart';
-import 'package:mikozi_mobile/shared/design_system/responsive_page_frame.dart';
+
+import '../../../app/theme/app_theme.dart';
+import '../../../shared/design_system/mikozi_brand.dart';
+import '../../../shared/design_system/primary_action.dart';
+import '../../../shared/design_system/responsive_page_frame.dart';
+import '../application/onboarding_controller.dart';
+import 'onboarding_slide.dart';
+import 'widgets/onboarding_artwork.dart';
 
 class OnboardingPage extends ConsumerStatefulWidget {
   const OnboardingPage({super.key});

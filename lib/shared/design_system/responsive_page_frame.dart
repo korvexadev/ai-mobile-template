@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mikozi_mobile/shared/design_system/app_spacing.dart';
+import 'app_spacing.dart';
 
 class ResponsivePageFrame extends StatelessWidget {
   const ResponsivePageFrame({

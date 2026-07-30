@@ -64,6 +64,11 @@ Cross-feature imports go through public domain/application interfaces. Promote c
 - Use the semantic spacing scale in `AppSpacing`; do not scatter arbitrary
   padding values. Screen gutters, vertical rhythm, readable widths, safe areas,
   and keyboard insets are part of every layout review.
+- Import project libraries through relative paths. Do not use
+  `package:mikozi_mobile/...` imports inside `lib/`.
+- Routed pages use the centralized `MikoziFadePage` transition. Keep navigation
+  motion fast, preserve reduced-motion behavior, and do not define ad hoc page
+  transitions inside features.
 - Business features consume app-level adaptive wrappers, not direct iOS-version checks.
 - Shared behavior and feature widgets remain platform-neutral. Put unavoidable
   Material/Cupertino branching in `adaptive_ui`, the vendored adaptive package,
@@ -83,8 +88,9 @@ Cross-feature imports go through public domain/application interfaces. Promote c
 - Use the references in `assets/design/` as a design library; translate their
   editorial hierarchy into original Mikozi UI and never ship reference
   screenshots as product artwork.
-- Use bundled Manrope for interface text and Newsreader for editorial display
-  type. Do not fetch fonts at runtime.
+- Use bundled Manrope across interface and editorial display type to preserve
+  the homepage reference's clean grotesk character. Do not fetch fonts at
+  runtime.
 - Keep source lines within the configured 80-character formatter width.
 - Apply SOLID boundaries at real behavior seams. Prefer small focused types,
   but do not create pass-through abstractions without a second responsibility
@@ -92,6 +98,23 @@ Cross-feature imports go through public domain/application interfaces. Promote c
 - Cache story metadata and decoded images with explicit size, age, and
   invalidation limits. Never grow an unbounded cache or duplicate the
   authoritative REST state.
+- Homepage presentation maps one isolated renderer to each backend section
+  type and preserves the resolved tab, section, and article order exactly.
+  Never promote, merge, refill, or reorder dashboard-configured content in the
+  widget tree.
+- Keep homepage card geometry in `HomeLayout`: the horizontal content inset is
+  8, large card radius is 12, and nested image radius is 8 unless a native
+  control shape has stronger platform semantics.
+- The homepage header is a fully transparent overlay with the logo only.
+  Refresh is pull-only: use the Cupertino sliver control on iOS and the
+  platform Material control elsewhere, prevent duplicates, and reconcile the
+  full authoritative REST snapshot.
+- Large story cards draw copy over a continuous image gradient, never a solid
+  text panel. Multi-story banners and horizontal sections keep the next card
+  visibly peeking into the viewport and take their heights from `HomeLayout`.
+- Shared controls avoid Material ink and elevation effects. Prefer restrained
+  Cupertino press behavior and common HugeIcons so Android and iOS retain one
+  calm, iOS-leaning visual language.
 - Widgets render state and send commands. Persistence, routing decisions,
   timers, networking, caching, and authentication rules live outside widgets.
 - Authentication tokens and session material use OS secure storage. Never put
@@ -109,11 +132,13 @@ Cross-feature imports go through public domain/application interfaces. Promote c
 - The backend, dashboard, and Flutter web app may all run on the development
   Mac. Flutter web and the iOS simulator can use `localhost`; the Android
   emulator uses `10.0.2.2`.
-- A physical iOS or Android device must receive a LAN-reachable backend base
-  URL through `MIKOZI_API_URL`. Never hardcode a developer IP or hostname.
-- Temporary HTTPS tunnel URLs also enter through `MIKOZI_API_URL`; never make a
-  Quick Tunnel hostname the source default, fixture, or committed launch
-  configuration because it changes when the tunnel restarts.
+- Mobile REST addressing is centralized in
+  `lib/core/constants/api_constants.dart`. Change `ApiConstants.origin` when
+  the active development or production host changes; do not introduce a
+  second base URL in a feature, widget, launch argument, or environment value.
+- Physical devices use the configured HTTPS origin directly. Quick Tunnel
+  hostnames are temporary, so update the single constant and fully restart the
+  application whenever the tunnel changes.
 - Keep local cleartext exceptions scoped to development or local-network
   traffic. Production endpoints use HTTPS, and platform security must not be
   broadly disabled to make local testing convenient.

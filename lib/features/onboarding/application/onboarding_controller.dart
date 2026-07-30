@@ -1,8 +1,9 @@
-import 'package:mikozi_mobile/features/onboarding/data/preferences_onboarding_repository.dart';
-import 'package:mikozi_mobile/features/onboarding/domain/onboarding_repository.dart';
-import 'package:mikozi_mobile/features/onboarding/domain/onboarding_status.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../data/preferences_onboarding_repository.dart';
+import '../domain/onboarding_repository.dart';
+import '../domain/onboarding_status.dart';
 
 part 'onboarding_controller.g.dart';
 

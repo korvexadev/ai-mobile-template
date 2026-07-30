@@ -1,5 +1,5 @@
-import 'package:mikozi_mobile/core/networking/mikozi_api_client.dart';
-import 'package:mikozi_mobile/features/home/domain/homepage.dart';
+import '../../../core/networking/mikozi_api_client.dart';
+import '../domain/homepage.dart';
 
 class RemoteHomepageRepository implements HomepageRepository {
   RemoteHomepageRepository(this._api);
@@ -61,6 +61,7 @@ class RemoteHomepageRepository implements HomepageRepository {
       title: json['title'] as String,
       summary: json['summary'] as String,
       heroImageUrl: json['heroImageUrl'] as String?,
+      publishedAt: DateTime.tryParse(json['publishedAt'] as String? ?? ''),
       category: _category(json['category'] as Map<String, dynamic>),
     );
   }

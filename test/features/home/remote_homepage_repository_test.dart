@@ -43,6 +43,50 @@ void main() {
       HomeSectionType.categories,
     ]);
   });
+
+  test('maps publication time used by homepage story metadata', () async {
+    final dio = Dio()
+      ..httpClientAdapter = _FakeAdapter({
+        'data': {
+          'version': 1,
+          'topNavigation': [
+            {
+              'id': 'category-1',
+              'name': 'National',
+              'slug': 'national',
+              'sections': [
+                {
+                  ..._section('banner'),
+                  'articles': [
+                    {
+                      'id': 'article-1',
+                      'slug': 'lead-story',
+                      'title': 'Lead story',
+                      'summary': 'Summary',
+                      'heroImageUrl': null,
+                      'publishedAt': '2030-01-01T12:00:00.000Z',
+                      'category': {
+                        'id': 'category-1',
+                        'name': 'National',
+                        'slug': 'national',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+          'moreNavigation': <Object?>[],
+        },
+      });
+
+    final result = await RemoteHomepageRepository(MikoziApiClient(dio)).fetch();
+
+    expect(
+      result.topNavigation.single.sections.single.articles.single.publishedAt,
+      DateTime.utc(2030, 1, 1, 12),
+    );
+  });
 }
 
 Map<String, dynamic> _section(String type) => {

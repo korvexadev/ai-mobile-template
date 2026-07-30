@@ -1,7 +1,7 @@
-import 'package:mikozi_mobile/features/auth/domain/auth_failure.dart';
-import 'package:mikozi_mobile/features/auth/domain/auth_profile.dart';
-import 'package:mikozi_mobile/features/auth/domain/auth_session.dart';
-import 'package:mikozi_mobile/features/auth/domain/otp_challenge.dart';
+import '../domain/auth_failure.dart';
+import '../domain/auth_profile.dart';
+import '../domain/auth_session.dart';
+import '../domain/otp_challenge.dart';
 
 abstract final class AuthResponseMapper {
   static OtpChallenge challenge(

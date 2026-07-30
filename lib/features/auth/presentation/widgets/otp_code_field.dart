@@ -1,8 +1,8 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mikozi_mobile/app/theme/app_theme.dart';
-import 'package:mikozi_mobile/shared/design_system/app_spacing.dart';
+import '../../../../app/theme/app_theme.dart';
+import '../../../../shared/design_system/app_spacing.dart';
 
 class OtpCodeField extends StatefulWidget {
   const OtpCodeField({

@@ -32,7 +32,8 @@ linter:
   # `// ignore_for_file: name_of_lint` syntax on the line or in the file
   # producing the lint.
   rules:
-    always_use_package_imports: true
+    always_use_package_imports: false
+    prefer_relative_imports: true
     avoid_dynamic_calls: true
     directives_ordering: true
     prefer_single_quotes: true

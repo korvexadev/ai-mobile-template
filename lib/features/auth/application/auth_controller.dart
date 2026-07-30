@@ -1,13 +1,14 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:mikozi_mobile/core/networking/network_providers.dart';
-import 'package:mikozi_mobile/features/auth/application/auth_flow_state.dart';
-import 'package:mikozi_mobile/features/auth/data/auth_api.dart';
-import 'package:mikozi_mobile/features/auth/data/auth_session_store.dart';
-import 'package:mikozi_mobile/features/auth/data/remote_auth_repository.dart';
-import 'package:mikozi_mobile/features/auth/domain/auth_failure.dart';
-import 'package:mikozi_mobile/features/auth/domain/auth_repository.dart';
-import 'package:mikozi_mobile/features/auth/domain/phone_number.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../../core/networking/network_providers.dart';
+import '../data/auth_api.dart';
+import '../data/auth_session_store.dart';
+import '../data/remote_auth_repository.dart';
+import '../domain/auth_failure.dart';
+import '../domain/auth_repository.dart';
+import '../domain/phone_number.dart';
+import 'auth_flow_state.dart';
 
 part 'auth_controller.g.dart';
 

@@ -8,7 +8,10 @@ class MikoziApiClient {
   final Dio _dio;
 
   Future<Map<String, dynamic>> getReaderHomepage() async {
-    final response = await _dio.get<Map<String, dynamic>>('/reader/homepage');
+    final response = await _dio.get<Map<String, dynamic>>(
+      '/reader/homepage',
+      options: Options(headers: const {'Cache-Control': 'no-cache'}),
+    );
     final envelope = response.data;
     final data = envelope?['data'];
     if (data is! Map<String, dynamic>) {

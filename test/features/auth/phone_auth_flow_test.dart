@@ -7,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mikozi_mobile/features/auth/application/auth_controller.dart';
 import 'package:mikozi_mobile/features/auth/domain/otp_challenge.dart';
+import 'package:mikozi_mobile/features/home/application/homepage_provider.dart';
+import 'package:mikozi_mobile/features/home/domain/homepage.dart';
 import 'package:mikozi_mobile/features/onboarding/application/onboarding_controller.dart';
 import 'package:mikozi_mobile/features/onboarding/domain/onboarding_repository.dart';
 import 'package:mikozi_mobile/features/onboarding/domain/onboarding_status.dart';
@@ -44,7 +46,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(authRepository.savedName, 'Chikondi');
-    expect(find.text('Today.'), findsOneWidget);
+    expect(find.text('National'), findsOneWidget);
     expect(find.text('Home'), findsOneWidget);
     expect(find.text('Latest'), findsOneWidget);
     expect(find.text('Saved'), findsOneWidget);
@@ -58,7 +60,7 @@ void main() {
     await tester.pumpWidget(_app(authRepository: authRepository));
     await tester.pumpAndSettle();
 
-    expect(find.text('Today.'), findsOneWidget);
+    expect(find.text('National'), findsOneWidget);
     expect(find.text('Your news,\nyour number.'), findsNothing);
 
     await tester.tap(find.text('Latest'));
@@ -178,9 +180,32 @@ Widget _app({required FakeAuthRepository authRepository}) {
       ),
       minimumSplashDurationProvider.overrideWithValue(Duration.zero),
       authRepositoryProvider.overrideWithValue(authRepository),
+      homepageRepositoryProvider.overrideWithValue(
+        const _StaticHomepageRepository(),
+      ),
     ],
     child: const MikoziApp(),
   );
+}
+
+class _StaticHomepageRepository implements HomepageRepository {
+  const _StaticHomepageRepository();
+
+  @override
+  Future<Homepage> fetch() async {
+    return const Homepage(
+      version: 1,
+      topNavigation: [
+        HomeTab(
+          id: 'national',
+          name: 'National',
+          slug: 'national',
+          sections: [],
+        ),
+      ],
+      moreNavigation: [],
+    );
+  }
 }
 
 class _CompletedOnboardingRepository implements OnboardingRepository {

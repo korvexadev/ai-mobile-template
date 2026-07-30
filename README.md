@@ -36,53 +36,19 @@ iOS 26 Liquid Glass components.
 - The shell currently contains a dummy editorial homepage plus Latest, Saved,
   and Profile destinations.
 
-Run against the local backend:
+## API address
+
+Every REST feature uses `ApiConstants.baseUrl`, currently:
 
 ```sh
-/Volumes/Dev/Flutter/flutter/bin/flutter run \
-  --dart-define=MIKOZI_API_URL=http://localhost:9289/api/v1
+https://breach-vegas-cinema-endorsed.trycloudflare.com/api/v1
 ```
 
-Local addressing depends on where Flutter is running:
-
-- Flutter web and the iOS simulator use
-  `http://localhost:9289/api/v1`.
-- The Android emulator uses `http://10.0.2.2:9289/api/v1`.
-- A physical phone cannot use `localhost`, because that points back to the
-  phone. Use the development Mac's reachable `.local` hostname or LAN address,
-  keep both devices on the same network, and make sure the backend listens on
-  a LAN-reachable interface.
-
-For a physical iPhone:
-
-```sh
-/Volumes/Dev/Flutter/flutter/bin/flutter run \
-  --dart-define=MIKOZI_API_URL=http://YOUR_MAC.local:9289/api/v1
-```
-
-An HTTPS Cloudflare Quick Tunnel is usually simpler for a physical device:
-
-```sh
-cloudflared tunnel --url http://localhost:9289
-
-/Volumes/Dev/Flutter/flutter/bin/flutter run \
-  --dart-define=MIKOZI_API_URL=https://YOUR_TUNNEL.trycloudflare.com/api/v1
-```
-
-For repeat local launches, copy `config/local.example.json` to the ignored
-`config/local.json`, set the current tunnel URL, and run:
-
-```sh
-/Volumes/Dev/Flutter/flutter/bin/flutter run \
-  --dart-define-from-file=config/local.json
-```
-
-The checked-in VS Code Flutter launch profiles use this local configuration.
-Keep the tunnel process running while using the app. Quick Tunnel hostnames are
-temporary and must not become the committed default API URL. Restart the
-Flutter process—not only hot reload—after changing a `--dart-define` value.
-Because the device connects to public HTTPS, this path does not require the
-iPhone and Mac to share a LAN or use iOS local-network permission.
+When the tunnel changes, edit only `origin` in
+`lib/core/constants/api_constants.dart`, keep the `/api/v1` version path
+unchanged, and fully restart the app. No environment variable or launch
+argument is required. Because the device connects to public HTTPS, it does not
+need to share a LAN with the development Mac.
 
 Local cleartext traffic is enabled only for Android debug/profile builds.
 iOS allows local-network development traffic and shows the standard local

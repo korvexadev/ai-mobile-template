@@ -1,6 +1,7 @@
-import 'package:mikozi_mobile/features/onboarding/domain/onboarding_repository.dart';
-import 'package:mikozi_mobile/features/onboarding/domain/onboarding_status.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../domain/onboarding_repository.dart';
+import '../domain/onboarding_status.dart';
 
 final class PreferencesOnboardingRepository implements OnboardingRepository {
   PreferencesOnboardingRepository(this._preferences);

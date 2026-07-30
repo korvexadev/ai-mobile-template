@@ -19,6 +19,7 @@ class HomeArticle {
     required this.title,
     required this.summary,
     required this.heroImageUrl,
+    required this.publishedAt,
     required this.category,
   });
 
@@ -27,6 +28,7 @@ class HomeArticle {
   final String title;
   final String summary;
   final String? heroImageUrl;
+  final DateTime? publishedAt;
   final HomeCategory category;
 }
 

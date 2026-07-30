@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:mikozi_mobile/features/auth/domain/auth_failure.dart';
+import '../domain/auth_failure.dart';
 
 class AuthApi {
   AuthApi(this._dio);

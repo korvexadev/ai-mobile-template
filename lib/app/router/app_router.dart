@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mikozi_mobile/app/adaptive/mikozi_page_boundary.dart';
-import 'package:mikozi_mobile/features/auth/application/auth_controller.dart';
-import 'package:mikozi_mobile/features/auth/application/auth_flow_state.dart';
-import 'package:mikozi_mobile/features/auth/presentation/complete_profile_page.dart';
-import 'package:mikozi_mobile/features/auth/presentation/login_page.dart';
-import 'package:mikozi_mobile/features/auth/presentation/otp_page.dart';
-import 'package:mikozi_mobile/features/home/presentation/reader_shell_page.dart';
-import 'package:mikozi_mobile/features/onboarding/application/onboarding_controller.dart';
-import 'package:mikozi_mobile/features/onboarding/domain/onboarding_status.dart';
-import 'package:mikozi_mobile/features/onboarding/presentation/onboarding_page.dart';
-import 'package:mikozi_mobile/features/onboarding/presentation/splash_page.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../features/auth/application/auth_controller.dart';
+import '../../features/auth/application/auth_flow_state.dart';
+import '../../features/auth/presentation/complete_profile_page.dart';
+import '../../features/auth/presentation/login_page.dart';
+import '../../features/auth/presentation/otp_page.dart';
+import '../../features/home/presentation/reader_shell_page.dart';
+import '../../features/onboarding/application/onboarding_controller.dart';
+import '../../features/onboarding/domain/onboarding_status.dart';
+import '../../features/onboarding/presentation/onboarding_page.dart';
+import '../../features/onboarding/presentation/splash_page.dart';
+import '../adaptive/mikozi_page_boundary.dart';
+import 'mikozi_fade_page.dart';
 
 part 'app_router.g.dart';
 
@@ -71,8 +73,8 @@ class SplashRoute extends GoRouteData with $SplashRoute {
   const SplashRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return _selectable(const SplashPage());
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _page(state, const SplashPage());
   }
 }
 
@@ -81,8 +83,8 @@ class OnboardingRoute extends GoRouteData with $OnboardingRoute {
   const OnboardingRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return _selectable(const OnboardingPage());
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _page(state, const OnboardingPage());
   }
 }
 
@@ -91,8 +93,8 @@ class LoginRoute extends GoRouteData with $LoginRoute {
   const LoginRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return _selectable(const LoginPage());
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _page(state, const LoginPage());
   }
 }
 
@@ -101,8 +103,8 @@ class OtpRoute extends GoRouteData with $OtpRoute {
   const OtpRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return _selectable(const OtpPage());
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _page(state, const OtpPage());
   }
 }
 
@@ -111,8 +113,8 @@ class CompleteProfileRoute extends GoRouteData with $CompleteProfileRoute {
   const CompleteProfileRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return _selectable(const CompleteProfilePage());
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _page(state, const CompleteProfilePage());
   }
 }
 
@@ -121,9 +123,14 @@ class HomeRoute extends GoRouteData with $HomeRoute {
   const HomeRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return _selectable(const ReaderShellPage());
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _page(state, const ReaderShellPage());
   }
 }
 
-Widget _selectable(Widget child) => MikoziPageBoundary(child: child);
+Page<void> _page(GoRouterState state, Widget child) {
+  return MikoziFadePage<void>(
+    key: state.pageKey,
+    child: MikoziPageBoundary(child: child),
+  );
+}

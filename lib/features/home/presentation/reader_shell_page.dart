@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/styles/stroke_rounded.dart';
-import 'package:mikozi_mobile/features/home/presentation/reader_tab_pages.dart';
-import 'package:mikozi_mobile/shared/adaptive_ui/adaptive_reader_shell.dart';
+
+import '../../../shared/adaptive_ui/adaptive_reader_shell.dart';
+import 'home_page.dart';
+import 'reader_tab_pages.dart';
 
 class ReaderShellPage extends StatefulWidget {
   const ReaderShellPage({super.key});
@@ -39,7 +41,7 @@ class _ReaderShellPageState extends State<ReaderShellPage> {
   ];
 
   static const _pages = <Widget>[
-    ReaderHomeTab(),
+    HomePage(),
     ReaderPlaceholderTab(title: 'Latest', subtitle: 'The newest stories.'),
     ReaderPlaceholderTab(title: 'Saved', subtitle: 'Stories kept for later.'),
     ReaderProfileTab(),

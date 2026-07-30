@@ -18,9 +18,9 @@ pixel copy.
   placed around every piece of content.
 - No ornamental gradients, glass overlays, excessive shadows, or generic
   dashboard cards.
-- Manrope carries interface text while Newsreader carries editorial display
-  moments. Both fonts are bundled so first-run and offline reading never depend
-  on a font download.
+- Manrope carries interface and editorial display text, matching the homepage
+  reference's clean, rounded grotesk character. It is bundled so first-run and
+  offline reading never depend on a font download.
 
 ## Reference-library use
 
@@ -35,6 +35,10 @@ pixel copy.
 
 - Native adaptive tab/navigation structures anchor Today, Discover, Saved, and
   Profile.
+- The homepage keeps its brand, search, and notification actions pinned above
+  the feed while content scrolls beneath. Lead media, category pills, compact
+  story rows, and the floating reader navigation translate `home.png` without
+  copying its fictional publisher content.
 - Search and section filters remain close to discovery content.
 - Authentication is a short, calm interruption: phone, code, optional profile,
   then return to the reader's pending destination.
@@ -64,3 +68,8 @@ The Dribbble reference contributes publisher rails, trending hierarchy,
 breaking-news filters, clean article typography, and profile composition.
 Apple guidance contributes content-first hierarchy, native navigation,
 Dynamic Type, platform consistency, and accessible controls.
+
+`home.png` contributes the pinned action layer, immersive lead card, compact
+category pills, restrained gray story rows, and floating navigation. The
+dashboard and backend remain authoritative for which section types appear and
+their order.

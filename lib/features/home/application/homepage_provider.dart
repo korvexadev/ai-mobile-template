@@ -1,8 +1,9 @@
-import 'package:mikozi_mobile/core/networking/mikozi_api_client.dart';
-import 'package:mikozi_mobile/core/networking/network_providers.dart';
-import 'package:mikozi_mobile/features/home/data/remote_homepage_repository.dart';
-import 'package:mikozi_mobile/features/home/domain/homepage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../../core/networking/mikozi_api_client.dart';
+import '../../../core/networking/network_providers.dart';
+import '../data/remote_homepage_repository.dart';
+import '../domain/homepage.dart';
 
 part 'homepage_provider.g.dart';
 

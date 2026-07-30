@@ -1,4 +1,4 @@
-import 'package:mikozi_mobile/features/auth/domain/auth_failure.dart';
+import 'auth_failure.dart';
 
 class MalawiPhoneNumber {
   const MalawiPhoneNumber._(this.value);

@@ -1,4 +1,4 @@
-import 'package:mikozi_mobile/features/auth/domain/auth_profile.dart';
+import 'auth_profile.dart';
 
 class AuthTokens {
   const AuthTokens({

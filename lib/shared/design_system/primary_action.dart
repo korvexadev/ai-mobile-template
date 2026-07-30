@@ -1,9 +1,10 @@
-import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mikozi_mobile/app/theme/app_theme.dart';
-import 'package:mikozi_mobile/shared/design_system/app_spacing.dart';
 
+import '../../app/theme/app_theme.dart';
+import 'app_spacing.dart';
+
+/// A common platform-neutral action with restrained Cupertino interaction.
 class PrimaryAction extends StatelessWidget {
   const PrimaryAction({
     required this.label,
@@ -22,64 +23,54 @@ class PrimaryAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final action = loading
-        ? AdaptiveButton.child(
-            onPressed: null,
-            enabled: false,
-            color: AppTheme.brandRed,
-            borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-            minSize: const Size.fromHeight(AppSpacing.actionHeight),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const _ActionProgress(),
-                const SizedBox(width: AppSpacing.sm),
-                Text(
-                  loadingLabel ?? label,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.labelLarge?.copyWith(color: Colors.white),
-                ),
-              ],
-            ),
-          )
-        : AdaptiveButton(
-            label: label,
-            onPressed: onPressed,
-            enabled: enabled,
-            color: AppTheme.brandRed,
-            textColor: Colors.white,
-            borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-            minSize: const Size.fromHeight(AppSpacing.actionHeight),
-          );
+    final canPress = enabled && onPressed != null;
+    final visuallyActive = canPress || loading;
+    final foreground = visuallyActive ? AppTheme.white : AppTheme.muted;
+
     return SizedBox(
       height: AppSpacing.actionHeight,
       width: double.infinity,
       child: Semantics(
         liveRegion: loading,
         label: loading ? loadingLabel ?? '$label in progress' : null,
-        child: action,
+        child: IgnorePointer(
+          ignoring: loading,
+          child: CupertinoButton(
+            padding: EdgeInsets.zero,
+            color: AppTheme.brandRed,
+            disabledColor: AppTheme.border,
+            borderRadius: BorderRadius.circular(14),
+            pressedOpacity: 0.72,
+            onPressed: visuallyActive ? onPressed ?? _ignorePress : null,
+            child: loading
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const CupertinoActivityIndicator(
+                        key: ValueKey('primary-action-progress'),
+                        color: AppTheme.white,
+                        radius: 9,
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Text(
+                        loadingLabel ?? label,
+                        style: Theme.of(
+                          context,
+                        ).textTheme.labelLarge?.copyWith(color: AppTheme.white),
+                      ),
+                    ],
+                  )
+                : Text(
+                    label,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelLarge?.copyWith(color: foreground),
+                  ),
+          ),
+        ),
       ),
     );
   }
-}
 
-class _ActionProgress extends StatelessWidget {
-  const _ActionProgress();
-
-  @override
-  Widget build(BuildContext context) {
-    if (PlatformInfo.isIOS) {
-      return const CupertinoActivityIndicator(
-        key: ValueKey('primary-action-progress'),
-        color: Colors.white,
-        radius: 9,
-      );
-    }
-    return const SizedBox.square(
-      key: ValueKey('primary-action-progress'),
-      dimension: 18,
-      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-    );
-  }
+  static void _ignorePress() {}
 }
