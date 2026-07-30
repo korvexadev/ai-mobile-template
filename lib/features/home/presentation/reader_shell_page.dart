@@ -101,7 +101,7 @@ class _ReaderShellPageState extends State<ReaderShellPage> {
       const HomePage(),
       const ReaderPlaceholderTab(
         title: 'Latest',
-        subtitle: 'The newest stories.',
+        subtitle: 'No latest stories yet.',
       ),
       const SavedArticlesPage(),
       ProfilePage(onOpenSaved: () => _select(ReaderDestination.saved.index)),

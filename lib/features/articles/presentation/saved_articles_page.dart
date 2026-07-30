@@ -8,6 +8,7 @@ import 'package:hugeicons/styles/stroke_rounded.dart';
 import '../../../app/theme/app_theme.dart';
 import '../../../shared/design_system/app_spacing.dart';
 import '../../../shared/widgets/mikozi_cached_network_image.dart';
+import '../../../shared/widgets/reader_page_header.dart';
 import '../application/saved_articles_controller.dart';
 import '../domain/saved_article.dart';
 
@@ -33,29 +34,7 @@ class SavedArticlesPage extends ConsumerWidget {
             parent: AlwaysScrollableScrollPhysics(),
           ),
           slivers: [
-            const SliverToBoxAdapter(
-              child: SafeArea(
-                bottom: false,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    AppSpacing.md,
-                    AppSpacing.xl,
-                    AppSpacing.md,
-                    AppSpacing.lg,
-                  ),
-                  child: Text(
-                    'Saved',
-                    style: TextStyle(
-                      color: AppTheme.ink,
-                      fontFamily: 'Manrope',
-                      fontSize: 30,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -0.8,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            const SliverToBoxAdapter(child: ReaderPageHeader(title: 'Saved')),
             ...articles.when(
               loading: () => const [_SavedLoading()],
               error: (error, stackTrace) => [

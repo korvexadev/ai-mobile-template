@@ -16,6 +16,11 @@ List<RouteBase> get $appRoutes => [
   $latestRoute,
   $savedRoute,
   $profileRoute,
+  $notificationSettingsRoute,
+  $subscriptionRoute,
+  $transactionsRoute,
+  $privacyPolicyRoute,
+  $aboutRoute,
   $articleRoute,
   $categoryArticlesRoute,
 ];
@@ -241,6 +246,140 @@ mixin $ProfileRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/profile');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $notificationSettingsRoute => GoRouteData.$route(
+  path: '/settings/notifications',
+  hasOverriddenOnExit: false,
+  factory: $NotificationSettingsRoute._fromState,
+);
+
+mixin $NotificationSettingsRoute on GoRouteData {
+  static NotificationSettingsRoute _fromState(GoRouterState state) =>
+      const NotificationSettingsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/notifications');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $subscriptionRoute => GoRouteData.$route(
+  path: '/settings/subscription',
+  hasOverriddenOnExit: false,
+  factory: $SubscriptionRoute._fromState,
+);
+
+mixin $SubscriptionRoute on GoRouteData {
+  static SubscriptionRoute _fromState(GoRouterState state) =>
+      const SubscriptionRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/subscription');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $transactionsRoute => GoRouteData.$route(
+  path: '/settings/transactions',
+  hasOverriddenOnExit: false,
+  factory: $TransactionsRoute._fromState,
+);
+
+mixin $TransactionsRoute on GoRouteData {
+  static TransactionsRoute _fromState(GoRouterState state) =>
+      const TransactionsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/transactions');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $privacyPolicyRoute => GoRouteData.$route(
+  path: '/settings/privacy',
+  hasOverriddenOnExit: false,
+  factory: $PrivacyPolicyRoute._fromState,
+);
+
+mixin $PrivacyPolicyRoute on GoRouteData {
+  static PrivacyPolicyRoute _fromState(GoRouterState state) =>
+      const PrivacyPolicyRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/privacy');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $aboutRoute => GoRouteData.$route(
+  path: '/settings/about',
+  hasOverriddenOnExit: false,
+  factory: $AboutRoute._fromState,
+);
+
+mixin $AboutRoute on GoRouteData {
+  static AboutRoute _fromState(GoRouterState state) => const AboutRoute();
+
+  @override
+  String get location => GoRouteData.$location('/settings/about');
 
   @override
   void go(BuildContext context) => context.go(location);

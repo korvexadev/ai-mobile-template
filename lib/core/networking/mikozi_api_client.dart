@@ -41,6 +41,26 @@ class MikoziApiClient {
     return data;
   }
 
+  Future<Map<String, dynamic>> getReaderEntitlement({
+    required String accessToken,
+  }) async {
+    final response = await _dio.get<Map<String, dynamic>>(
+      '/subscriptions/me',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Cache-Control': 'no-cache',
+        },
+      ),
+    );
+    final envelope = response.data;
+    final data = envelope?['data'];
+    if (data is! Map<String, dynamic>) {
+      throw const FormatException('Invalid subscription response.');
+    }
+    return data;
+  }
+
   Future<Map<String, dynamic>> getReaderCategoryArticles({
     required String slug,
     int limit = 30,

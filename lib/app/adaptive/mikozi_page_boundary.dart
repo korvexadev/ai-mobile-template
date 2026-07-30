@@ -15,10 +15,7 @@ class MikoziPageBoundary extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: AppTheme.light.copyWith(platform: Theme.of(context).platform),
-      child: Material(
-        type: MaterialType.transparency,
-        child: SelectionArea(child: child),
-      ),
+      child: Material(type: MaterialType.transparency, child: child),
     );
   }
 }

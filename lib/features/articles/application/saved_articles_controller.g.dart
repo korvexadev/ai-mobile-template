@@ -83,7 +83,7 @@ final class SavedArticlesControllerProvider
 }
 
 String _$savedArticlesControllerHash() =>
-    r'e4ea1890aa4df70143d5981748a304ffa2097943';
+    r'5752af213e344e21015f3d3930abeb7179b27b6e';
 
 abstract class _$SavedArticlesController
     extends $AsyncNotifier<List<SavedArticle>> {

@@ -14,6 +14,7 @@ import '../../features/onboarding/application/onboarding_controller.dart';
 import '../../features/onboarding/domain/onboarding_status.dart';
 import '../../features/onboarding/presentation/onboarding_page.dart';
 import '../../features/onboarding/presentation/splash_page.dart';
+import '../../features/profile/presentation/profile_settings_pages.dart';
 import '../adaptive/mikozi_page_boundary.dart';
 import 'mikozi_fade_page.dart';
 
@@ -69,7 +70,8 @@ String? _redirect(Ref ref, GoRouterState state) {
           location == const SavedRoute().location ||
           location == const ProfileRoute().location ||
           location.startsWith('/articles/') ||
-          location.startsWith('/categories/'))) {
+          location.startsWith('/categories/') ||
+          location.startsWith('/settings/'))) {
     return null;
   }
   return location == target ? null : target;
@@ -178,6 +180,57 @@ class ProfileRoute extends GoRouteData with $ProfileRoute {
       state,
       const ReaderShellPage(destination: ReaderDestination.profile),
     );
+  }
+}
+
+@TypedGoRoute<NotificationSettingsRoute>(path: '/settings/notifications')
+class NotificationSettingsRoute extends GoRouteData
+    with $NotificationSettingsRoute {
+  const NotificationSettingsRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _page(state, const NotificationSettingsPage());
+  }
+}
+
+@TypedGoRoute<SubscriptionRoute>(path: '/settings/subscription')
+class SubscriptionRoute extends GoRouteData with $SubscriptionRoute {
+  const SubscriptionRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _page(state, const SubscriptionPage());
+  }
+}
+
+@TypedGoRoute<TransactionsRoute>(path: '/settings/transactions')
+class TransactionsRoute extends GoRouteData with $TransactionsRoute {
+  const TransactionsRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _page(state, const TransactionsPage());
+  }
+}
+
+@TypedGoRoute<PrivacyPolicyRoute>(path: '/settings/privacy')
+class PrivacyPolicyRoute extends GoRouteData with $PrivacyPolicyRoute {
+  const PrivacyPolicyRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _page(state, const PrivacyPolicyPage());
+  }
+}
+
+@TypedGoRoute<AboutRoute>(path: '/settings/about')
+class AboutRoute extends GoRouteData with $AboutRoute {
+  const AboutRoute();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return _page(state, const AboutPage());
   }
 }
 

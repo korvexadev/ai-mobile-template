@@ -124,6 +124,9 @@ the shared contract-first loop in `../backend/docs/DELIVERY_WORKFLOW.md`.
 - [x] `done` Group local bookmarks by their actual save date, retain concise
       article snapshots with hero/inline-image fallback, and mirror the proven
       ChanguFood iOS 26 in-place native tab shell with Mikozi HugeIcon assets.
+- [x] `done` Rebuild Profile around reader identity and live daily entitlement,
+      expose subscription and account settings, add Privacy and About routes,
+      read the bundled pubspec version, and align Latest and Saved headings.
 - [ ] `pending` Handle publication updates as hints and reconcile through REST
       when sockets or push are introduced.
 - [ ] `pending` Pass the shared publish-and-read journey with backend/dashboard.
