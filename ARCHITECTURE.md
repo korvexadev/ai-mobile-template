@@ -1,5 +1,11 @@
 # Mobile Architecture
 
+Mobile features use the same Mikozi vocabulary and delivery order as backend:
+`identity`, `taxonomy`, `media`, `newsroom`, `audience`, `feeds`,
+`advertising`, `engagement`, and `distribution`. The app consumes generated
+REST/OpenAPI contracts and never reproduces publication eligibility, protected
+targeting, permission, or ad-decision rules.
+
 ## Directory target
 
 ```text
@@ -86,6 +92,34 @@ The package is the platform boundary:
 - Android: Material 3 equivalents.
 
 Use `AdaptiveApp.router` at the root. Use `AdaptiveScaffold` and adaptive navigation components on screens. Set `useNativeToolbar: true` and `useNativeBottomBar: true` only in the design-system wrappers so feature code cannot accidentally produce inconsistent navigation.
+
+Every typed route places its page inside `MikoziPageBoundary`, below the
+Navigator. The boundary provides Mikozi's shared Material theme, a transparent
+Material interaction surface, and selectable text under both `MaterialApp` and
+`CupertinoApp`. Feature behavior does not branch by platform. Adaptive controls
+own native rendering differences—for example, the same authentication field
+uses `TextField` on Android and `CupertinoTextField` on iOS.
+
+The authenticated reader shell follows the reviewed ChanguFood platform
+pattern: iOS 26+ uses the package's native `UITabBar` path with Liquid Glass,
+SF Symbols, and persistent tab bodies; other platforms use the same tab model
+with Mikozi's HugeIcons fallback. Tab selection remains presentation state.
+
+## Phone authentication
+
+The identity feature maps the backend REST contract through a repository:
+
+1. Normalize a Malawi number in the domain.
+2. Request an OTP challenge.
+3. Verify the six-digit challenge.
+4. Persist rotating session tokens only in OS secure storage.
+5. Route a null/blank server `displayName` to profile completion.
+6. Route completed profiles to the reader shell.
+
+The router observes generated Riverpod auth/onboarding state through one stable
+refresh notifier. Widgets collect input and send commands; they do not parse
+transport responses, store credentials, decide first-time status, or refresh
+tokens.
 
 Native iOS platform-view and method-channel code remains inside the package. Pin the package to a reviewed commit or maintain an internal fork; upgrades require native smoke tests and a short ADR/release note.
 
