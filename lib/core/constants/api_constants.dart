@@ -4,7 +4,7 @@
 /// [baseUrl], so endpoint paths remain independent from the active host.
 abstract final class ApiConstants {
   static const String origin =
-      'https://losses-gdp-hurricane-start.trycloudflare.com';
+      'https://blocking-workforce-requesting-worcester.trycloudflare.com';
   static const String versionPath = '/api/v1';
   static const String baseUrl = '$origin$versionPath';
 }

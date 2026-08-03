@@ -15,6 +15,12 @@ import 'package:mikozi_mobile/features/articles/domain/saved_article.dart';
 import 'package:mikozi_mobile/features/articles/domain/saved_articles_repository.dart';
 import 'package:mikozi_mobile/features/articles/presentation/article_detail_page.dart';
 import 'package:mikozi_mobile/features/articles/presentation/widgets/article_floating_header.dart';
+import 'package:mikozi_mobile/features/payments/application/payments_controller.dart';
+import 'package:mikozi_mobile/features/payments/domain/payment.dart';
+import 'package:mikozi_mobile/features/payments/domain/payment_repository.dart';
+import 'package:mikozi_mobile/features/profile/application/reader_entitlement_provider.dart';
+import 'package:mikozi_mobile/features/profile/domain/reader_entitlement.dart';
+import 'package:mikozi_mobile/features/profile/domain/reader_entitlement_repository.dart';
 
 void main() {
   testWidgets('renders the article contract in server-provided order', (
@@ -128,6 +134,123 @@ void main() {
     expect(share.lastRequest?.anchor.width, greaterThan(0));
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets(
+    'renders the preview and plan carousel when access is exhausted',
+    (tester) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(393, 852);
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            readerArticleRepositoryProvider.overrideWithValue(
+              const _LimitedArticleRepository(),
+            ),
+            paymentRepositoryProvider.overrideWithValue(
+              const _PaymentRepository(),
+            ),
+            readerEntitlementRepositoryProvider.overrideWithValue(
+              const _EntitlementRepository(),
+            ),
+          ],
+          child: const MaterialApp(
+            home: MikoziPageBoundary(
+              child: ArticleDetailPage(slug: 'locked-story'),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('Locked story'), findsOneWidget);
+      expect(find.text('Keep reading'), findsOneWidget);
+      expect(find.text('Mikozi Plus'), findsOneWidget);
+      expect(find.text('Choose plan'), findsOneWidget);
+    },
+  );
+}
+
+class _LimitedArticleRepository implements ReaderArticleRepository {
+  const _LimitedArticleRepository();
+
+  @override
+  Future<ReaderArticle> readBySlug(String slug) async {
+    throw ReaderArticleFailure(
+      code: 'DAILY_ARTICLE_LIMIT_REACHED',
+      message: 'Your daily article allowance has been reached.',
+      preview: ReaderArticlePreview(
+        slug: slug,
+        title: 'Locked story',
+        summary: 'A preview summary.',
+        heroImageUrl: null,
+        categoryName: 'National',
+      ),
+    );
+  }
+}
+
+class _EntitlementRepository implements ReaderEntitlementRepository {
+  const _EntitlementRepository();
+
+  @override
+  Future<ReaderEntitlement> fetch() async {
+    return ReaderEntitlement(
+      planName: 'Free',
+      dailyArticleLimit: 3,
+      articlesReadToday: 3,
+      articlesRemainingToday: 0,
+      resetsAt: DateTime.utc(2030, 1, 2),
+      endsAt: null,
+    );
+  }
+}
+
+class _PaymentRepository implements PaymentRepository {
+  const _PaymentRepository();
+
+  @override
+  Future<List<PaymentPlan>> listPlans() async => const [
+    PaymentPlan(
+      id: 'plus-id',
+      code: 'plus',
+      name: 'Mikozi Plus',
+      description: null,
+      priceMinor: 500000,
+      currency: 'MWK',
+      billingPeriod: 'monthly',
+      dailyArticleLimit: null,
+    ),
+  ];
+
+  @override
+  Future<List<MobileMoneyOperator>> listOperators() async => const [];
+
+  @override
+  Future<List<PaymentTransaction>> listTransactions() async => const [];
+
+  @override
+  Future<PaymentTransaction?> pendingTransaction() async => null;
+
+  @override
+  Future<PaymentTransaction> initiateBankTransfer({
+    required String planId,
+    required String idempotencyKey,
+  }) => throw UnimplementedError();
+
+  @override
+  Future<PaymentTransaction> initiateMobileMoney({
+    required String planId,
+    required String operatorId,
+    required String phoneNumber,
+    required String idempotencyKey,
+  }) => throw UnimplementedError();
+
+  @override
+  Future<PaymentTransaction> verify(String transactionId) =>
+      throw UnimplementedError();
 }
 
 class _FixtureArticleRepository implements ReaderArticleRepository {

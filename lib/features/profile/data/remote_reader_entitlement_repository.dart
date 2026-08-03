@@ -42,6 +42,9 @@ class RemoteReaderEntitlementRepository implements ReaderEntitlementRepository {
       articlesRemainingToday: json['articlesRemainingToday'] as int?,
       resetsAt: DateTime.parse(json['resetsAt'] as String),
       endsAt: _date(json['endsAt']),
+      globalFreeAccess: json['globalFreeAccess'] as bool? ?? false,
+      globalFreeAccessEndsAt: _date(json['globalFreeAccessEndsAt']),
+      paymentsEnabled: json['paymentsEnabled'] as bool? ?? true,
     );
   }
 

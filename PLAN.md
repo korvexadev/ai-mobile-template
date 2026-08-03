@@ -32,6 +32,8 @@ the shared contract-first loop in `../backend/docs/DELIVERY_WORKFLOW.md`.
 - [x] `done` Make local physical-device auth use the ignored tunnel
       configuration, add adaptive action progress, and guarantee recovery from
       every OTP/profile busy state.
+- [x] `done` Let a confirmed display-name write complete onboarding even when
+      a compatible backend returns a partial profile mutation body.
 - [x] `done` Ship the first-run splash, three-page onboarding, persisted
       completion state, typed routing, and the initial Login destination.
 - [ ] `pending` Add pending-link capture, TTL, and post-auth continuation.
@@ -127,6 +129,15 @@ the shared contract-first loop in `../backend/docs/DELIVERY_WORKFLOW.md`.
 - [x] `done` Rebuild Profile around reader identity and live daily entitlement,
       expose subscription and account settings, add Privacy and About routes,
       read the bundled pubspec version, and align Latest and Saved headings.
+- [x] `done` Add the PayChangu subscription paywall, mobile-money and bank
+      payment flows, copyable bank instructions, live pending status, and real
+      transaction history with global-free-access suppression.
+- [x] `done` Make the paywall plan layout responsive, isolate progress to the
+      selected plan, and allow a validated alternate mobile-money payer number
+      without changing subscription ownership.
+- [x] `done` Resolve Airtel Money and TNM Mpamba from the payer prefix, keep
+      alternate-number entry explicit, and provide readable copy-confirmed
+      bank instructions.
 - [ ] `pending` Handle publication updates as hints and reconcile through REST
       when sockets or push are introduced.
 - [ ] `pending` Pass the shared publish-and-read journey with backend/dashboard.

@@ -72,7 +72,7 @@ final class ReaderArticleProvider
     required ReaderArticleFamily super.from,
     required String super.argument,
   }) : super(
-         retry: null,
+         retry: _noRetry,
          name: r'readerArticleProvider',
          isAutoDispose: true,
          dependencies: null,
@@ -112,13 +112,13 @@ final class ReaderArticleProvider
   }
 }
 
-String _$readerArticleHash() => r'62901ddd88423d7e328b3921dfd255e38d56b5bf';
+String _$readerArticleHash() => r'6e5f1acc9eb6d927de1b3b2f16c7499c1356e0df';
 
 final class ReaderArticleFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<ReaderArticle>, String> {
   ReaderArticleFamily._()
     : super(
-        retry: null,
+        retry: _noRetry,
         name: r'readerArticleProvider',
         dependencies: null,
         $allTransitiveDependencies: null,

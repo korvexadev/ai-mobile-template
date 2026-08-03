@@ -171,24 +171,28 @@ class ProfileContent extends StatelessWidget {
                         _AllowanceCard(
                           entitlement: entitlement,
                           loading: entitlementLoading,
-                          onPressed: onOpenSubscription,
+                          onPressed: entitlement?.paymentsEnabled == false
+                              ? null
+                              : onOpenSubscription,
                         ),
                         const SizedBox(height: AppSpacing.lg),
                         const _GroupLabel(label: 'PERSONAL'),
                         const SizedBox(height: AppSpacing.xs),
                         _SettingsGroup(
                           children: [
-                            _ProfileRow(
-                              icon: HugeIconsStrokeRounded.walletCards,
-                              label: 'Subscription',
-                              value: entitlement?.planName,
-                              onPressed: onOpenSubscription,
-                            ),
-                            _ProfileRow(
-                              icon: HugeIconsStrokeRounded.invoice02,
-                              label: 'Transactions',
-                              onPressed: onOpenTransactions,
-                            ),
+                            if (entitlement?.paymentsEnabled != false) ...[
+                              _ProfileRow(
+                                icon: HugeIconsStrokeRounded.walletCards,
+                                label: 'Subscription',
+                                value: entitlement?.planName,
+                                onPressed: onOpenSubscription,
+                              ),
+                              _ProfileRow(
+                                icon: HugeIconsStrokeRounded.invoice02,
+                                label: 'Transactions',
+                                onPressed: onOpenTransactions,
+                              ),
+                            ],
                             _ProfileRow(
                               icon: HugeIconsStrokeRounded.bookmark02,
                               label: 'Saved stories',
@@ -327,21 +331,15 @@ class _AllowanceCard extends StatelessWidget {
 
   final ReaderEntitlement? entitlement;
   final bool loading;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
-    final remaining = entitlement?.articlesRemainingToday;
-    final value = entitlement?.isUnlimited == true
-        ? 'Unlimited'
-        : remaining?.toString() ?? '—';
-    final label = entitlement?.isUnlimited == true
-        ? 'stories today'
-        : remaining == 1
-        ? 'story left today'
-        : 'stories left today';
+    final read = entitlement?.articlesReadToday;
+    final value = read?.toString() ?? '—';
+    final label = read == 1 ? 'story read today' : 'stories read today';
     return Semantics(
-      button: true,
+      button: onPressed != null,
       label: '$value $label',
       child: CupertinoButton(
         key: const ValueKey('profile-daily-allowance'),

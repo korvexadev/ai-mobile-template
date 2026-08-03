@@ -70,7 +70,17 @@ class RemoteAuthRepository implements AuthRepository {
       accessToken: session.tokens.accessToken,
       displayName: displayName,
     );
-    final updated = session.copyWith(profile: AuthResponseMapper.profile(json));
+    var profile = session.profile.copyWith(displayName: displayName);
+    if (json != null) {
+      try {
+        profile = AuthResponseMapper.profile(json);
+      } on AuthFailure catch (failure) {
+        if (failure.code != 'INVALID_RESPONSE') {
+          rethrow;
+        }
+      }
+    }
+    final updated = session.copyWith(profile: profile);
     await _sessionStore.write(updated);
     return updated;
   }

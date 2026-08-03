@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/theme/app_theme.dart';
 import '../../../shared/design_system/app_spacing.dart';
 import '../../../shared/widgets/mikozi_cached_network_image.dart';
+import '../../payments/presentation/widgets/article_paywall.dart';
 import '../application/article_actions_controller.dart';
 import '../application/reader_article_provider.dart';
 import '../application/saved_articles_controller.dart';
@@ -342,6 +343,13 @@ class _ArticleError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (error is ReaderArticleFailure &&
+        (error as ReaderArticleFailure).code == 'DAILY_ARTICLE_LIMIT_REACHED') {
+      return ArticlePaywall(
+        failure: error as ReaderArticleFailure,
+        onRetry: onRetry,
+      );
+    }
     final message = switch (error) {
       ReaderArticleFailure(code: 'DAILY_ARTICLE_LIMIT_REACHED') =>
         'Your reading limit has been reached for today.',

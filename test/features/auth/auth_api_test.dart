@@ -3,7 +3,12 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mikozi_mobile/features/auth/data/auth_api.dart';
+import 'package:mikozi_mobile/features/auth/data/auth_session_store.dart';
+import 'package:mikozi_mobile/features/auth/data/remote_auth_repository.dart';
 import 'package:mikozi_mobile/features/auth/domain/auth_failure.dart';
+import 'package:mikozi_mobile/features/auth/domain/auth_session.dart';
+
+import '../../support/fake_auth_repository.dart';
 
 void main() {
   test('request OTP uses the versioned auth contract', () async {
@@ -59,6 +64,49 @@ void main() {
       ),
     );
   });
+
+  test(
+    'successful profile write is not rejected for a partial response',
+    () async {
+      final adapter = _AuthAdapter(
+        statusCode: 200,
+        body: <String, Object?>{
+          'data': <String, Object?>{'updated': true},
+        },
+      );
+      final dio = Dio(BaseOptions(baseUrl: 'https://mikozi.test/api/v1'))
+        ..httpClientAdapter = adapter;
+      final store = _MemorySessionStore();
+      final repository = RemoteAuthRepository(AuthApi(dio), store);
+
+      final updated = await repository.updateDisplayName(
+        session: session(displayName: null),
+        displayName: 'Chikondi',
+      );
+
+      expect(adapter.lastOptions?.method, 'PATCH');
+      expect(adapter.lastOptions?.path, '/auth/me');
+      expect(updated.profile.displayName, 'Chikondi');
+      expect(store.saved?.profile.displayName, 'Chikondi');
+    },
+  );
+}
+
+class _MemorySessionStore implements AuthSessionStore {
+  AuthSession? saved;
+
+  @override
+  Future<void> delete() async {
+    saved = null;
+  }
+
+  @override
+  Future<AuthSession?> read() async => saved;
+
+  @override
+  Future<void> write(AuthSession session) async {
+    saved = session;
+  }
 }
 
 class _AuthAdapter implements HttpClientAdapter {

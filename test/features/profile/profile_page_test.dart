@@ -53,8 +53,8 @@ void main() {
     expect(find.text('MR'), findsOneWidget);
     expect(find.text('Mikozi Reader'), findsOneWidget);
     expect(find.text('+265991234567'), findsOneWidget);
-    expect(find.text('6'), findsOneWidget);
-    expect(find.text('stories left today'), findsOneWidget);
+    expect(find.text('4'), findsOneWidget);
+    expect(find.text('stories read today'), findsOneWidget);
     expect(find.text('Reader Plus'), findsNWidgets(2));
     expect(find.text('Notifications'), findsOneWidget);
     expect(find.text('Subscription'), findsOneWidget);
@@ -78,5 +78,50 @@ void main() {
     expect(signedOut, isTrue);
     expect(find.text('Mikozi 1.0.0 (1)'), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('hides payment settings during a global free-reading window', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ProfileContent(
+          profile: const AuthProfile(
+            id: 'reader-1',
+            phoneNumber: '+265991234567',
+            displayName: 'Mikozi Reader',
+            preferredLanguage: 'en',
+          ),
+          savedCount: 0,
+          entitlement: ReaderEntitlement(
+            planName: 'Free',
+            dailyArticleLimit: 3,
+            articlesReadToday: 3,
+            articlesRemainingToday: null,
+            resetsAt: DateTime.utc(2030, 1, 2),
+            endsAt: null,
+            globalFreeAccess: true,
+            paymentsEnabled: false,
+          ),
+          entitlementLoading: false,
+          appVersion: '1.0.0 (1)',
+          signingOut: false,
+          onOpenSaved: () {},
+          onOpenNotifications: () {},
+          onOpenSubscription: () {},
+          onOpenTransactions: () {},
+          onOpenPrivacy: () {},
+          onOpenAbout: () {},
+          onDeleteAccount: () {},
+          onSignOut: () {},
+        ),
+      ),
+    );
+
+    expect(find.text('Free'), findsOneWidget);
+    expect(find.text('3'), findsOneWidget);
+    expect(find.text('stories read today'), findsOneWidget);
+    expect(find.text('Subscription'), findsNothing);
+    expect(find.text('Transactions'), findsNothing);
   });
 }

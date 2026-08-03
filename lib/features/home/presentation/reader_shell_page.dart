@@ -3,6 +3,7 @@ import 'package:hugeicons/styles/stroke_rounded.dart';
 
 import '../../../shared/adaptive_ui/adaptive_reader_shell.dart';
 import '../../articles/presentation/saved_articles_page.dart';
+import '../../payments/presentation/widgets/pending_payment_edge_card.dart';
 import '../../profile/presentation/profile_page.dart';
 import 'home_page.dart';
 import 'reader_tab_pages.dart';
@@ -106,11 +107,18 @@ class _ReaderShellPageState extends State<ReaderShellPage> {
       const SavedArticlesPage(),
       ProfilePage(onOpenSaved: () => _select(ReaderDestination.saved.index)),
     ];
-    return AdaptiveReaderShell(
-      selectedIndex: _selectedIndex,
-      onSelected: _select,
-      items: _items,
-      body: _buildBody(pages),
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: AdaptiveReaderShell(
+            selectedIndex: _selectedIndex,
+            onSelected: _select,
+            items: _items,
+            body: _buildBody(pages),
+          ),
+        ),
+        const PendingPaymentEdgeCard(),
+      ],
     );
   }
 }

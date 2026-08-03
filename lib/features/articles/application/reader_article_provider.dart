@@ -22,7 +22,9 @@ ReaderArticleRepository readerArticleRepository(Ref ref) {
   );
 }
 
-@riverpod
+@Riverpod(retry: _noRetry)
 Future<ReaderArticle> readerArticle(Ref ref, String slug) {
   return ref.watch(readerArticleRepositoryProvider).readBySlug(slug);
 }
+
+Duration? _noRetry(int retryCount, Object error) => null;

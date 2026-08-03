@@ -93,3 +93,17 @@ adaptive app supplies both Cupertino and Material localization delegates so
 selection controls work on iOS as well as Material platforms.
 Editorial bodies should still use explicit selectable reader components when
 article detail is introduced.
+
+## Payments
+
+Subscription payments use the authenticated REST API; the app never contains a
+PayChangu credential or talks to PayChangu directly. Mobile money resolves
+Airtel Money for `9…` numbers and TNM Mpamba for `8…` numbers. The signed-in
+number is the default, with an explicit alternate-number flow. Bank-transfer
+details are large, selectable, copyable, and confirm successful copying while
+the backend continues verification after the sheet is closed.
+
+Only one pending charge is allowed at a time. A small edge status control and
+the Transactions page reconcile that charge through the backend. During an
+effective administrator-scheduled free-reading window, the entitlement hides
+subscription and transaction actions and the article paywall is suppressed.

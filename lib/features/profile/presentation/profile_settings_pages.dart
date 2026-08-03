@@ -8,8 +8,6 @@ import 'package:hugeicons/styles/stroke_rounded.dart';
 import '../../../app/theme/app_theme.dart';
 import '../../../shared/design_system/app_spacing.dart';
 import '../application/app_version_provider.dart';
-import '../application/reader_entitlement_provider.dart';
-import '../domain/reader_entitlement.dart';
 
 class NotificationSettingsPage extends StatelessWidget {
   const NotificationSettingsPage({super.key});
@@ -21,46 +19,6 @@ class NotificationSettingsPage extends StatelessWidget {
       child: _QuietState(
         icon: HugeIconsStrokeRounded.notification02,
         label: 'No notification preferences yet.',
-      ),
-    );
-  }
-}
-
-class TransactionsPage extends StatelessWidget {
-  const TransactionsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const _SettingsPage(
-      title: 'Transactions',
-      child: _QuietState(
-        icon: HugeIconsStrokeRounded.invoice02,
-        label: 'No transactions yet.',
-      ),
-    );
-  }
-}
-
-class SubscriptionPage extends ConsumerWidget {
-  const SubscriptionPage({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final entitlement = ref.watch(readerEntitlementProvider);
-    return _SettingsPage(
-      title: 'Subscription',
-      onRefresh: () async {
-        final _ = await ref.refresh(readerEntitlementProvider.future);
-      },
-      child: entitlement.when(
-        loading: () =>
-            const Center(child: CircularProgressIndicator.adaptive()),
-        error: (error, stackTrace) => _RetryState(
-          onPressed: () {
-            ref.invalidate(readerEntitlementProvider);
-          },
-        ),
-        data: _SubscriptionDetails.new,
       ),
     );
   }
@@ -146,15 +104,10 @@ class AboutPage extends ConsumerWidget {
 }
 
 class _SettingsPage extends StatelessWidget {
-  const _SettingsPage({
-    required this.title,
-    required this.child,
-    this.onRefresh,
-  });
+  const _SettingsPage({required this.title, required this.child});
 
   final String title;
   final Widget child;
-  final Future<void> Function()? onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -226,87 +179,7 @@ class _SettingsPage extends StatelessWidget {
         const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxl)),
       ],
     );
-    return ColoredBox(
-      color: AppTheme.paper,
-      child: onRefresh == null
-          ? content
-          : RefreshIndicator.adaptive(
-              color: AppTheme.brandRed,
-              backgroundColor: AppTheme.paper,
-              onRefresh: onRefresh!,
-              child: content,
-            ),
-    );
-  }
-}
-
-class _SubscriptionDetails extends StatelessWidget {
-  const _SubscriptionDetails(this.entitlement);
-
-  final ReaderEntitlement entitlement;
-
-  @override
-  Widget build(BuildContext context) {
-    final remaining = entitlement.isUnlimited
-        ? 'Unlimited'
-        : entitlement.articlesRemainingToday.toString();
-    final limit = entitlement.dailyArticleLimit?.toString() ?? 'Unlimited';
-    return Align(
-      alignment: Alignment.topCenter,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: AppTheme.white,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _DetailRow(label: 'Plan', value: entitlement.planName),
-              const Divider(height: AppSpacing.lg),
-              _DetailRow(label: 'Daily stories', value: limit),
-              const Divider(height: AppSpacing.lg),
-              _DetailRow(
-                label: 'Read today',
-                value: entitlement.articlesReadToday.toString(),
-              ),
-              const Divider(height: AppSpacing.lg),
-              _DetailRow(label: 'Remaining', value: remaining),
-              const Divider(height: AppSpacing.lg),
-              _DetailRow(
-                label: 'Resets',
-                value: _shortDateTime(entitlement.resetsAt),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _DetailRow extends StatelessWidget {
-  const _DetailRow({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            label,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: AppTheme.muted),
-          ),
-        ),
-        Text(value, style: Theme.of(context).textTheme.titleMedium),
-      ],
-    );
+    return ColoredBox(color: AppTheme.paper, child: content);
   }
 }
 
@@ -365,28 +238,4 @@ class _QuietState extends StatelessWidget {
       ),
     );
   }
-}
-
-class _RetryState extends StatelessWidget {
-  const _RetryState({required this.onPressed});
-
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: CupertinoButton(
-        onPressed: onPressed,
-        child: const Text('Try again'),
-      ),
-    );
-  }
-}
-
-String _shortDateTime(DateTime value) {
-  final local = value.toLocal();
-  final hour = local.hour % 12 == 0 ? 12 : local.hour % 12;
-  final minute = local.minute.toString().padLeft(2, '0');
-  final period = local.hour < 12 ? 'AM' : 'PM';
-  return '$hour:$minute $period';
 }

@@ -14,6 +14,7 @@ import '../../features/onboarding/application/onboarding_controller.dart';
 import '../../features/onboarding/domain/onboarding_status.dart';
 import '../../features/onboarding/presentation/onboarding_page.dart';
 import '../../features/onboarding/presentation/splash_page.dart';
+import '../../features/payments/presentation/payment_pages.dart';
 import '../../features/profile/presentation/profile_settings_pages.dart';
 import '../adaptive/mikozi_page_boundary.dart';
 import 'mikozi_fade_page.dart';

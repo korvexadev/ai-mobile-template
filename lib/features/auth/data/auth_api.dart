@@ -30,7 +30,7 @@ class AuthApi {
     );
   }
 
-  Future<Map<String, dynamic>> updateDisplayName({
+  Future<Map<String, dynamic>?> updateDisplayName({
     required String accessToken,
     required String displayName,
   }) async {
@@ -42,7 +42,7 @@ class AuthApi {
           headers: <String, Object?>{'Authorization': 'Bearer $accessToken'},
         ),
       );
-      return _unwrap(response.data);
+      return _unwrapOptionalProfile(response.data);
     } on DioException catch (error) {
       throw _failure(error);
     }
@@ -69,6 +69,17 @@ class AuthApi {
       );
     }
     return data;
+  }
+
+  Map<String, dynamic>? _unwrapOptionalProfile(Map<String, dynamic>? envelope) {
+    final data = envelope?['data'];
+    if (data is Map<String, dynamic>) {
+      return data;
+    }
+    if (envelope != null && envelope['id'] is String) {
+      return envelope;
+    }
+    return null;
   }
 
   AuthFailure _failure(DioException exception) {

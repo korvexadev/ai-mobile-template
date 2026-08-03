@@ -114,13 +114,42 @@ class RemoteReaderArticleRepository implements ReaderArticleRepository {
         final code = error['code'];
         final message = error['message'];
         if (code is String && message is String) {
-          return ReaderArticleFailure(code: code, message: message);
+          return ReaderArticleFailure(
+            code: code,
+            message: message,
+            preview: _preview(error['details']),
+          );
         }
       }
     }
     return const ReaderArticleFailure(
       code: 'NETWORK_UNAVAILABLE',
       message: 'The article could not be loaded. Try again.',
+    );
+  }
+
+  ReaderArticlePreview? _preview(Object? details) {
+    if (details is! Map<String, dynamic>) return null;
+    final article = details['article'];
+    if (article is! Map<String, dynamic>) return null;
+    final category = article['category'];
+    if (category is! Map<String, dynamic>) return null;
+    final slug = article['slug'];
+    final title = article['title'];
+    final summary = article['summary'];
+    final categoryName = category['name'];
+    if (slug is! String ||
+        title is! String ||
+        summary is! String ||
+        categoryName is! String) {
+      return null;
+    }
+    return ReaderArticlePreview(
+      slug: slug,
+      title: title,
+      summary: summary,
+      heroImageUrl: article['heroImageUrl'] as String?,
+      categoryName: categoryName,
     );
   }
 }
