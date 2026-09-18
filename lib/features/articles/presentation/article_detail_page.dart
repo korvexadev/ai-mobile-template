@@ -106,7 +106,7 @@ class _ArticleDetailPageState extends ConsumerState<ArticleDetailPage> {
     final actionState = actions.value;
     final loadedArticle = article.value;
     return ColoredBox(
-      color: AppTheme.paper,
+      color: AppTheme.paperOf(context),
       child: Stack(
         children: [
           Positioned.fill(
@@ -161,7 +161,7 @@ class _ArticleBody extends StatelessWidget {
     return RefreshIndicator.adaptive(
       key: const ValueKey('article-adaptive-refresh-control'),
       color: AppTheme.brandRed,
-      backgroundColor: AppTheme.paper,
+      backgroundColor: AppTheme.paperOf(context),
       edgeOffset: safeTop + 46,
       displacement: safeTop + 66,
       onRefresh: onRefresh,
@@ -229,7 +229,7 @@ class _ArticleContent extends StatelessWidget {
           Text(
             article.summary,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: AppTheme.muted,
+              color: AppTheme.mutedOf(context),
               fontWeight: FontWeight.w500,
               height: 1.48,
             ),
@@ -244,7 +244,7 @@ class _ArticleContent extends StatelessWidget {
           Text(
             metadata,
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: AppTheme.muted,
+              color: AppTheme.mutedOf(context),
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -302,7 +302,7 @@ class _ArticleLoading extends StatelessWidget {
               width: 90,
               height: 12,
               decoration: BoxDecoration(
-                color: AppTheme.border,
+                color: AppTheme.borderOf(context),
                 borderRadius: BorderRadius.circular(6),
               ),
             ),
@@ -312,18 +312,18 @@ class _ArticleLoading extends StatelessWidget {
                 width: width,
                 height: 28,
                 decoration: BoxDecoration(
-                  color: AppTheme.softSurface,
+                  color: AppTheme.softSurfaceOf(context),
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
               const SizedBox(height: AppSpacing.xs),
             ],
             const SizedBox(height: AppSpacing.lg),
-            const AspectRatio(
+            AspectRatio(
               aspectRatio: 4 / 3,
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: AppTheme.softSurface,
+                  color: AppTheme.softSurfaceOf(context),
                   borderRadius: BorderRadius.all(Radius.circular(12)),
                 ),
               ),

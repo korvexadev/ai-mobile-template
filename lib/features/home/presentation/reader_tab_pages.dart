@@ -17,7 +17,7 @@ class ReaderPlaceholderTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: AppTheme.paper,
+      color: AppTheme.paperOf(context),
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(
           parent: AlwaysScrollableScrollPhysics(),
@@ -36,9 +36,9 @@ class ReaderPlaceholderTab extends StatelessWidget {
                 ),
                 child: Text(
                   subtitle,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(color: AppTheme.muted),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppTheme.mutedOf(context),
+                  ),
                 ),
               ),
             ),

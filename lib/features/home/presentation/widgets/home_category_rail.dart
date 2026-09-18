@@ -96,8 +96,8 @@ class _MoreCategoriesSheet extends StatelessWidget {
         ),
         child: DecoratedBox(
           key: const ValueKey('more-categories-sheet'),
-          decoration: const BoxDecoration(
-            color: AppTheme.white,
+          decoration: BoxDecoration(
+            color: AppTheme.surfaceOf(context),
             borderRadius: BorderRadius.vertical(
               top: Radius.circular(AppSpacing.radiusLarge),
             ),
@@ -110,7 +110,7 @@ class _MoreCategoriesSheet extends StatelessWidget {
                 width: 38,
                 height: AppSpacing.xxs,
                 decoration: BoxDecoration(
-                  color: AppTheme.border,
+                  color: AppTheme.borderOf(context),
                   borderRadius: BorderRadius.circular(AppSpacing.xxs),
                 ),
               ),
@@ -135,8 +135,8 @@ class _MoreCategoriesSheet extends StatelessWidget {
                       button: true,
                       label: 'Close categories',
                       child: DecoratedBox(
-                        decoration: const BoxDecoration(
-                          color: AppTheme.softSurface,
+                        decoration: BoxDecoration(
+                          color: AppTheme.softSurfaceOf(context),
                           shape: BoxShape.circle,
                         ),
                         child: CupertinoButton(
@@ -144,9 +144,9 @@ class _MoreCategoriesSheet extends StatelessWidget {
                           padding: EdgeInsets.zero,
                           minimumSize: const Size.square(40),
                           onPressed: () => Navigator.of(context).pop(),
-                          child: const HugeIcon(
+                          child: HugeIcon(
                             icon: HugeIconsStrokeRounded.cancel01,
-                            color: AppTheme.ink,
+                            color: AppTheme.inkOf(context),
                             size: 18,
                           ),
                         ),
@@ -155,7 +155,7 @@ class _MoreCategoriesSheet extends StatelessWidget {
                   ],
                 ),
               ),
-              const Divider(height: 1, color: AppTheme.border),
+              Divider(height: 1, color: AppTheme.borderOf(context)),
               Flexible(
                 child: ListView.separated(
                   shrinkWrap: true,
@@ -167,11 +167,11 @@ class _MoreCategoriesSheet extends StatelessWidget {
                   ),
                   itemCount: tabs.length,
                   separatorBuilder: (context, index) {
-                    return const Divider(
+                    return Divider(
                       height: 1,
                       indent: AppSpacing.sm,
                       endIndent: AppSpacing.sm,
-                      color: AppTheme.border,
+                      color: AppTheme.borderOf(context),
                     );
                   },
                   itemBuilder: (context, index) {
@@ -205,7 +205,7 @@ class _MoreCategoryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final foreground = selected ? AppTheme.brandRed : AppTheme.ink;
+    final foreground = selected ? AppTheme.brandRed : AppTheme.inkOf(context);
     return Semantics(
       button: true,
       selected: selected,
@@ -235,7 +235,7 @@ class _MoreCategoryRow extends StatelessWidget {
                 ),
               ),
               if (selected)
-                const HugeIcon(
+                HugeIcon(
                   icon: HugeIconsStrokeRounded.checkmarkCircle02,
                   color: AppTheme.brandRed,
                   size: 20,
@@ -296,12 +296,14 @@ class _CategoryPillContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final foreground = selected ? AppTheme.white : AppTheme.muted;
+    final foreground = selected
+        ? AppTheme.surfaceOf(context)
+        : AppTheme.mutedOf(context);
     return Container(
       height: 42,
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       decoration: BoxDecoration(
-        color: selected ? AppTheme.brandRed : AppTheme.softSurface,
+        color: selected ? AppTheme.brandRed : AppTheme.softSurfaceOf(context),
         borderRadius: BorderRadius.circular(HomeLayout.controlRadius),
       ),
       child: Row(

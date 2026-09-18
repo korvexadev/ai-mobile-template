@@ -83,19 +83,19 @@ class _HeaderAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final foreground = selected ? AppTheme.brandRed : AppTheme.ink;
+    final foreground = selected ? AppTheme.brandRed : AppTheme.inkOf(context);
     return Semantics(
       button: true,
       selected: selected,
       label: label,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: AppTheme.white.withValues(alpha: 0.88),
+          color: AppTheme.surfaceOf(context).withValues(alpha: 0.88),
           shape: BoxShape.circle,
           border: Border.all(
             color: selected
                 ? AppTheme.brandRed.withValues(alpha: 0.28)
-                : AppTheme.border,
+                : AppTheme.borderOf(context),
           ),
         ),
         child: CupertinoButton(

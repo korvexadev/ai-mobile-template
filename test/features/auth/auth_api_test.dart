@@ -90,6 +90,54 @@ void main() {
       expect(store.saved?.profile.displayName, 'Chikondi');
     },
   );
+
+  test(
+    'concurrent session checks share one rotating refresh request',
+    () async {
+      final adapter = _AuthAdapter(
+        statusCode: 200,
+        body: <String, Object?>{
+          'data': <String, Object?>{
+            'accessToken': 'new-access-token',
+            'refreshToken': 'new-refresh-token',
+            'accessExpiresAt': '2032-01-01T00:00:00.000Z',
+            'refreshExpiresAt': '2033-01-01T00:00:00.000Z',
+          },
+        },
+      );
+      final dio = Dio(BaseOptions(baseUrl: 'https://mikozi.test/api/v1'))
+        ..httpClientAdapter = adapter;
+      final store = _MemorySessionStore()..saved = _expiredSession();
+      final repository = RemoteAuthRepository(
+        AuthApi(dio),
+        store,
+        clock: () => DateTime.utc(2030),
+      );
+
+      final sessions = await Future.wait(
+        List<Future<AuthSession?>>.generate(4, (_) => repository.restore()),
+      );
+
+      expect(adapter.requestCount, 1);
+      expect(
+        sessions.map((value) => value?.tokens.accessToken),
+        everyElement('new-access-token'),
+      );
+      expect(store.saved?.tokens.refreshToken, 'new-refresh-token');
+    },
+  );
+}
+
+AuthSession _expiredSession() {
+  final current = session(displayName: 'Reader');
+  return current.copyWith(
+    tokens: AuthTokens(
+      accessToken: 'expired-access-token',
+      refreshToken: 'refresh-token',
+      accessExpiresAt: DateTime.utc(2029),
+      refreshExpiresAt: DateTime.utc(2031),
+    ),
+  );
 }
 
 class _MemorySessionStore implements AuthSessionStore {
@@ -115,6 +163,7 @@ class _AuthAdapter implements HttpClientAdapter {
   final int statusCode;
   final Map<String, Object?> body;
   RequestOptions? lastOptions;
+  int requestCount = 0;
 
   @override
   Future<ResponseBody> fetch(
@@ -122,6 +171,7 @@ class _AuthAdapter implements HttpClientAdapter {
     Stream<List<int>>? requestStream,
     Future<void>? cancelFuture,
   ) async {
+    requestCount += 1;
     lastOptions = options;
     return ResponseBody.fromString(
       jsonEncode(body),

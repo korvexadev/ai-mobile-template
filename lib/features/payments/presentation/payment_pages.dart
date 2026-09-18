@@ -120,10 +120,10 @@ class PaymentSettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: AppTheme.paper,
+      color: AppTheme.paperOf(context),
       child: RefreshIndicator.adaptive(
         color: AppTheme.brandRed,
-        backgroundColor: AppTheme.paper,
+        backgroundColor: AppTheme.paperOf(context),
         onRefresh: onRefresh,
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(
@@ -146,9 +146,9 @@ class PaymentSettingsPage extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         minimumSize: const Size(44, 44),
                         onPressed: context.pop,
-                        child: const HugeIcon(
+                        child: HugeIcon(
                           icon: HugeIconsStrokeRounded.arrowLeft01,
-                          color: AppTheme.ink,
+                          color: AppTheme.inkOf(context),
                           size: 22,
                         ),
                       ),
@@ -259,6 +259,27 @@ class _PaymentMethodSheetState extends ConsumerState<_PaymentMethodSheet> {
     }
   }
 
+  void _showPhoneEntry(String phoneNumber) {
+    setState(() {
+      _phoneController.text = phoneNumber;
+      _phoneController.selection = TextSelection.collapsed(
+        offset: _phoneController.text.length,
+      );
+      _useAnotherNumber = true;
+    });
+  }
+
+  void _toggleAlternatePhone() {
+    if (_useAnotherNumber) {
+      setState(() {
+        _useAnotherNumber = false;
+        _phoneController.clear();
+      });
+      return;
+    }
+    _showPhoneEntry('');
+  }
+
   Future<void> _bank() async {
     setState(() => _submittingMethod = 'bank_transfer');
     final transaction = await ref
@@ -276,7 +297,11 @@ class _PaymentMethodSheetState extends ConsumerState<_PaymentMethodSheet> {
         context: context,
         useSafeArea: true,
         isScrollControlled: true,
-        builder: (context) => _BankDetails(account: account),
+        builder: (context) => _BankDetails(
+          account: account,
+          amountMinor: transaction.amountMinor,
+          currency: transaction.currency,
+        ),
       );
     }
   }
@@ -322,10 +347,12 @@ class _PaymentMethodSheetState extends ConsumerState<_PaymentMethodSheet> {
             const SizedBox(height: AppSpacing.xxs),
             Text(
               'Payment details',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: AppTheme.muted),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: AppTheme.mutedOf(context),
+              ),
             ),
+            const SizedBox(height: AppSpacing.md),
+            _PaymentAmount(plan: widget.plan),
             const SizedBox(height: AppSpacing.md),
             if (registeredOperator != null && registeredNetwork != null)
               _MethodButton(
@@ -333,14 +360,10 @@ class _PaymentMethodSheetState extends ConsumerState<_PaymentMethodSheet> {
                 icon: HugeIconsStrokeRounded.smartPhone01,
                 label: registeredNetwork.label,
                 subtitle: _displayPhone(_registeredPhone),
-                busy: _submittingMethod == 'mobile_money_registered',
+                busy: false,
                 onPressed: busy
                     ? null
-                    : () => _mobileMoney(
-                        registeredOperator,
-                        _registeredPhone,
-                        'mobile_money_registered',
-                      ),
+                    : () => _showPhoneEntry(_registeredPhone),
               ),
             _MethodButton(
               icon: HugeIconsStrokeRounded.bank,
@@ -356,17 +379,9 @@ class _PaymentMethodSheetState extends ConsumerState<_PaymentMethodSheet> {
                   horizontal: AppSpacing.sm,
                   vertical: AppSpacing.xs,
                 ),
-                onPressed: busy
-                    ? null
-                    : () {
-                        setState(() {
-                          _useAnotherNumber = !_useAnotherNumber;
-                        });
-                      },
+                onPressed: busy ? null : _toggleAlternatePhone,
                 child: Text(
-                  _useAnotherNumber
-                      ? 'Use registered number'
-                      : 'Use another number',
+                  _useAnotherNumber ? 'Cancel' : 'Use another number',
                 ),
               ),
             ),
@@ -407,7 +422,7 @@ class _PaymentMethodSheetState extends ConsumerState<_PaymentMethodSheet> {
                     _mobileMoney(
                       alternateOperator,
                       _phoneController.text,
-                      'mobile_money_alternate',
+                      'mobile_money',
                     );
                   }
                 },
@@ -418,7 +433,7 @@ class _PaymentMethodSheetState extends ConsumerState<_PaymentMethodSheet> {
                 label: alternateNetwork == null
                     ? 'Pay now'
                     : 'Pay with ${alternateNetwork.label}',
-                loading: _submittingMethod == 'mobile_money_alternate',
+                loading: _submittingMethod == 'mobile_money',
                 loadingLabel: 'Starting payment',
                 enabled: !busy && alternateOperator != null,
                 onPressed: alternateOperator == null || busy
@@ -426,7 +441,7 @@ class _PaymentMethodSheetState extends ConsumerState<_PaymentMethodSheet> {
                     : () => _mobileMoney(
                         alternateOperator,
                         _phoneController.text,
-                        'mobile_money_alternate',
+                        'mobile_money',
                       ),
               ),
             ],
@@ -440,6 +455,47 @@ class _PaymentMethodSheetState extends ConsumerState<_PaymentMethodSheet> {
                   ).textTheme.bodyMedium?.copyWith(color: AppTheme.error),
                 ),
               ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PaymentAmount extends StatelessWidget {
+  const _PaymentAmount({required this.plan});
+
+  final PaymentPlan plan;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      key: const ValueKey('payment-sheet-amount'),
+      decoration: BoxDecoration(
+        color: AppTheme.softSurfaceOf(context),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                'Amount',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppTheme.mutedOf(context),
+                ),
+              ),
+            ),
+            Text(
+              _money(plan.currency, plan.priceMinor),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+            ),
           ],
         ),
       ),
@@ -473,8 +529,8 @@ class _MethodButton extends StatelessWidget {
         onPressed: onPressed,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: AppTheme.white,
-            border: Border.all(color: AppTheme.border),
+            color: AppTheme.surfaceOf(context),
+            border: Border.all(color: AppTheme.borderOf(context)),
             borderRadius: BorderRadius.circular(12),
           ),
           child: SizedBox(
@@ -483,7 +539,11 @@ class _MethodButton extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
               child: Row(
                 children: [
-                  HugeIcon(icon: icon, color: AppTheme.ink, size: 22),
+                  HugeIcon(
+                    icon: icon,
+                    color: AppTheme.inkOf(context),
+                    size: 22,
+                  ),
                   const SizedBox(width: AppSpacing.sm),
                   Expanded(
                     child: Column(
@@ -498,17 +558,17 @@ class _MethodButton extends StatelessWidget {
                           Text(
                             subtitle!,
                             style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: AppTheme.muted),
+                                ?.copyWith(color: AppTheme.mutedOf(context)),
                           ),
                       ],
                     ),
                   ),
                   if (busy)
-                    const CupertinoActivityIndicator()
+                    CupertinoActivityIndicator()
                   else
-                    const HugeIcon(
+                    HugeIcon(
                       icon: HugeIconsStrokeRounded.arrowRight01,
-                      color: AppTheme.muted,
+                      color: AppTheme.mutedOf(context),
                       size: 18,
                     ),
                 ],
@@ -522,9 +582,15 @@ class _MethodButton extends StatelessWidget {
 }
 
 class _BankDetails extends StatelessWidget {
-  const _BankDetails({required this.account});
+  const _BankDetails({
+    required this.account,
+    required this.amountMinor,
+    required this.currency,
+  });
 
   final BankPaymentAccount account;
+  final int amountMinor;
+  final String currency;
 
   @override
   Widget build(BuildContext context) {
@@ -544,6 +610,10 @@ class _BankDetails extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: AppSpacing.lg),
+          _CopyDetail(
+            label: 'Amount to transfer',
+            value: _money(currency, amountMinor),
+          ),
           _CopyDetail(label: 'Bank', value: account.bankName),
           _CopyDetail(label: 'Account name', value: account.accountName),
           _CopyDetail(label: 'Account number', value: account.accountNumber),
@@ -552,12 +622,25 @@ class _BankDetails extends StatelessWidget {
             'Expires ${_dateTime(account.expiresAt)}',
             style: Theme.of(
               context,
-            ).textTheme.bodySmall?.copyWith(color: AppTheme.muted),
+            ).textTheme.bodySmall?.copyWith(color: AppTheme.mutedOf(context)),
           ),
         ],
       ),
     );
   }
+}
+
+String _money(String currency, int amountMinor) {
+  final amount = amountMinor / 100;
+  final raw = amount == amount.roundToDouble()
+      ? amount.toStringAsFixed(0)
+      : amount.toStringAsFixed(2);
+  final parts = raw.split('.');
+  final whole = parts.first.replaceAllMapped(
+    RegExp(r'\B(?=(\d{3})+(?!\d))'),
+    (_) => ',',
+  );
+  return '$currency $whole${parts.length == 1 ? '' : '.${parts.last}'}';
 }
 
 class _CopyDetail extends StatefulWidget {
@@ -584,7 +667,7 @@ class _CopyDetailState extends State<_CopyDetail> {
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: AppTheme.softSurface,
+          color: AppTheme.softSurfaceOf(context),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Padding(
@@ -650,7 +733,7 @@ class _CurrentPlan extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppTheme.white,
+        color: AppTheme.surfaceOf(context),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Padding(
@@ -687,7 +770,7 @@ class _PendingSummary extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.sm),
         child: Row(
           children: [
-            const CupertinoActivityIndicator(),
+            CupertinoActivityIndicator(),
             const SizedBox(width: AppSpacing.sm),
             Expanded(
               child: Text(
@@ -713,7 +796,7 @@ class _TransactionRow extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSpacing.xs),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: AppTheme.white,
+          color: AppTheme.surfaceOf(context),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Padding(
@@ -751,7 +834,7 @@ class _TransactionRow extends StatelessWidget {
                           ? const Color(0xFF237A4A)
                           : transaction.status == PaymentStatus.failed
                           ? AppTheme.error
-                          : AppTheme.muted,
+                          : AppTheme.mutedOf(context),
                     ),
                   ),
                 ],

@@ -12,6 +12,28 @@ abstract final class AppTheme {
   static const softSurface = Color(0xFFF2F0EB);
   static const error = Color(0xFFB4232D);
 
+  static const darkPaper = Color(0xFF141518);
+  static const darkSurface = Color(0xFF202126);
+  static const darkSoftSurface = Color(0xFF292B31);
+  static const darkInk = Color(0xFFF5F2ED);
+  static const darkMuted = Color(0xFFB5B5BC);
+  static const darkBorder = Color(0xFF3C3E45);
+
+  static bool isDark(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark;
+
+  static Color paperOf(BuildContext context) =>
+      isDark(context) ? darkPaper : paper;
+  static Color surfaceOf(BuildContext context) =>
+      isDark(context) ? darkSurface : white;
+  static Color softSurfaceOf(BuildContext context) =>
+      isDark(context) ? darkSoftSurface : softSurface;
+  static Color inkOf(BuildContext context) => isDark(context) ? darkInk : ink;
+  static Color mutedOf(BuildContext context) =>
+      isDark(context) ? darkMuted : muted;
+  static Color borderOf(BuildContext context) =>
+      isDark(context) ? darkBorder : border;
+
   static const ColorScheme _colors = ColorScheme(
     brightness: Brightness.light,
     primary: brandRed,
@@ -189,6 +211,56 @@ abstract final class AppTheme {
         color: brandRed,
         linearTrackColor: border,
         circularTrackColor: border,
+      ),
+    );
+  }
+
+  static ThemeData get dark {
+    final colors =
+        ColorScheme.fromSeed(
+          seedColor: brandRed,
+          brightness: Brightness.dark,
+          surface: darkPaper,
+        ).copyWith(
+          primary: const Color(0xFFFF7780),
+          onPrimary: darkPaper,
+          surface: darkPaper,
+          onSurface: darkInk,
+          onSurfaceVariant: darkMuted,
+          outline: darkMuted,
+          outlineVariant: darkBorder,
+          surfaceContainerHighest: darkSoftSurface,
+        );
+    final text = _textTheme.apply(bodyColor: darkInk, displayColor: darkInk);
+    return light.copyWith(
+      brightness: Brightness.dark,
+      colorScheme: colors,
+      scaffoldBackgroundColor: darkPaper,
+      canvasColor: darkPaper,
+      textTheme: text,
+      primaryTextTheme: text,
+      appBarTheme: light.appBarTheme.copyWith(foregroundColor: darkInk),
+      inputDecorationTheme: light.inputDecorationTheme.copyWith(
+        fillColor: darkSurface,
+        hintStyle: text.bodyLarge?.copyWith(color: darkMuted),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: darkBorder),
+        ),
+      ),
+      cardTheme: light.cardTheme.copyWith(color: darkSurface),
+      dividerTheme: const DividerThemeData(color: darkBorder),
+      navigationBarTheme: light.navigationBarTheme.copyWith(
+        backgroundColor: darkSurface,
+        indicatorColor: darkSoftSurface,
+      ),
+      bottomSheetTheme: light.bottomSheetTheme.copyWith(
+        backgroundColor: darkPaper,
+      ),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+        color: Color(0xFFFF7780),
+        linearTrackColor: darkBorder,
+        circularTrackColor: darkBorder,
       ),
     );
   }

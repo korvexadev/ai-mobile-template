@@ -38,16 +38,16 @@ class ArticlePaywall extends ConsumerWidget {
         Positioned.fill(child: _Preview(preview: failure.preview)),
         Positioned.fill(
           top: MediaQuery.sizeOf(context).height * 0.28,
-          child: const DecoratedBox(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Color(0x00FAF9F6),
-                  Color(0xF2FAF9F6),
-                  AppTheme.paper,
-                  AppTheme.paper,
+                  AppTheme.paperOf(context).withValues(alpha: 0),
+                  AppTheme.paperOf(context).withValues(alpha: 0.95),
+                  AppTheme.paperOf(context),
+                  AppTheme.paperOf(context),
                 ],
                 stops: [0, 0.2, 0.38, 1],
               ),
@@ -71,9 +71,9 @@ class ArticlePaywall extends ConsumerWidget {
                 const SizedBox(height: AppSpacing.xxs),
                 Text(
                   'Choose plan',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(color: AppTheme.muted),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppTheme.mutedOf(context),
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 payments.when(

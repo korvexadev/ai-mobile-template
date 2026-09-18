@@ -1,6 +1,7 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:hugeicons/styles/stroke_rounded.dart';
 import '../../../../app/theme/app_theme.dart';
@@ -23,65 +24,70 @@ class AuthPageFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AdaptiveScaffold(
-      body: ColoredBox(
-        color: AppTheme.ink,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final compact = constraints.maxHeight < 700;
-            final headerHeight = compact ? 280.0 : 330.0;
-            final remainingHeight = constraints.maxHeight - headerHeight;
-            final sheetMinHeight = remainingHeight > 360
-                ? remainingHeight
-                : 360.0;
-            return SingleChildScrollView(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 680),
-                  child: Column(
-                    children: [
-                      _AuthHeader(
-                        height: headerHeight,
-                        title: title,
-                        subtitle: subtitle,
-                        onBack: onBack,
-                      ),
-                      Container(
-                        constraints: BoxConstraints(minHeight: sheetMinHeight),
-                        decoration: const BoxDecoration(
-                          color: AppTheme.paper,
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(36),
-                          ),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: AdaptiveScaffold(
+        body: ColoredBox(
+          color: AppTheme.ink,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final compact = constraints.maxHeight < 700;
+              final headerHeight = compact ? 280.0 : 330.0;
+              final remainingHeight = constraints.maxHeight - headerHeight;
+              final sheetMinHeight = remainingHeight > 360
+                  ? remainingHeight
+                  : 360.0;
+              return SingleChildScrollView(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 680),
+                    child: Column(
+                      children: [
+                        _AuthHeader(
+                          height: headerHeight,
+                          title: title,
+                          subtitle: subtitle,
+                          onBack: onBack,
                         ),
-                        child: SafeArea(
-                          top: false,
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(
-                                maxWidth: AppSpacing.contentMaxWidth,
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                  AppSpacing.page,
-                                  AppSpacing.xl,
-                                  AppSpacing.page,
-                                  AppSpacing.xl,
+                        Container(
+                          constraints: BoxConstraints(
+                            minHeight: sheetMinHeight,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppTheme.paperOf(context),
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(36),
+                            ),
+                          ),
+                          child: SafeArea(
+                            top: false,
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxWidth: AppSpacing.contentMaxWidth,
                                 ),
-                                child: child,
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                    AppSpacing.page,
+                                    AppSpacing.xl,
+                                    AppSpacing.page,
+                                    AppSpacing.xl,
+                                  ),
+                                  child: child,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
@@ -171,7 +177,7 @@ class _BackButton extends StatelessWidget {
         minimumSize: const Size.square(44),
         pressedOpacity: 0.62,
         onPressed: onPressed,
-        child: const HugeIcon(
+        child: HugeIcon(
           icon: HugeIconsStrokeRounded.arrowLeft01,
           size: 21,
           color: Colors.white,

@@ -28,8 +28,8 @@ class ReaderPageHeader extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 title,
-                style: const TextStyle(
-                  color: AppTheme.ink,
+                style: TextStyle(
+                  color: AppTheme.inkOf(context),
                   fontFamily: 'Manrope',
                   fontSize: 30,
                   fontWeight: FontWeight.w800,

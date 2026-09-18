@@ -14,18 +14,19 @@ final class OnboardingSlide {
 
 const onboardingSlides = <OnboardingSlide>[
   OnboardingSlide(
-    title: 'News, without the noise.',
+    title: 'Access the latest and hottest news',
     description: 'The stories that matter, arranged with clarity.',
     artwork: OnboardingArtwork.frontPage,
   ),
   OnboardingSlide(
-    title: 'Made for reading.',
-    description: 'Quiet typography, generous space, and every word in focus.',
+    title: 'Made with entertainment at its core.',
+    description:
+        'Mikozi issues a balance between storytelling and entertainment',
     artwork: OnboardingArtwork.reading,
   ),
   OnboardingSlide(
-    title: 'Keep your world close.',
-    description: 'Follow sections and return to stories when you are ready.',
+    title: 'Enjoy the latest',
+    description: 'Be updates with the stories that matter',
     artwork: OnboardingArtwork.collection,
   ),
 ];

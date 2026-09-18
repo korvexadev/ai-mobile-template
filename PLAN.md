@@ -3,6 +3,21 @@
 Status values are `pending`, `in_progress`, `blocked`, and `done`. Work follows
 the shared contract-first loop in `../backend/docs/DELIVERY_WORKFLOW.md`.
 
+## Reader appearance and live state (September 2026)
+
+- [x] `done` Add a persisted System/Light/Dark appearance choice and dark
+      Material/Cupertino reader palettes, including route-level theme support.
+- [x] `done` Give empty Home, category, and Saved collections explanatory
+      states; distinguish the unavailable Latest feed from an empty response.
+- [x] `done` Refresh the REST-owned daily allowance after an authenticated
+      article read and retain payment REST reconciliation while pending.
+- [ ] `blocked` Reader notifications need backend device registration,
+      delivery, inbox/preferences, and unread contracts. The current backend
+      only exposes administrator drafts with `deliveryConnected: false`.
+- [ ] `blocked` Socket updates need a deployed authenticated endpoint and
+      versioned event catalog. `docs/SOCKETS.md` currently specifies a future
+      design, with no backend gateway or emitted reader events.
+
 ## 0. Platform foundation and contract tooling
 
 - [ ] `in_progress` Scaffold Flutter with Riverpod, `go_router`, strict
@@ -34,6 +49,8 @@ the shared contract-first loop in `../backend/docs/DELIVERY_WORKFLOW.md`.
       every OTP/profile busy state.
 - [x] `done` Let a confirmed display-name write complete onboarding even when
       a compatible backend returns a partial profile mutation body.
+- [x] `done` Serialize concurrent access-token renewal through one rotating
+      refresh request so parallel authenticated reads cannot revoke a session.
 - [x] `done` Ship the first-run splash, three-page onboarding, persisted
       completion state, typed routing, and the initial Login destination.
 - [ ] `pending` Add pending-link capture, TTL, and post-auth continuation.
@@ -129,6 +146,8 @@ the shared contract-first loop in `../backend/docs/DELIVERY_WORKFLOW.md`.
 - [x] `done` Rebuild Profile around reader identity and live daily entitlement,
       expose subscription and account settings, add Privacy and About routes,
       read the bundled pubspec version, and align Latest and Saved headings.
+- [x] `done` Show reads during global free access and remaining daily allowance
+      after the free-reading window closes in the Profile usage card.
 - [x] `done` Add the PayChangu subscription paywall, mobile-money and bank
       payment flows, copyable bank instructions, live pending status, and real
       transaction history with global-free-access suppression.
@@ -138,6 +157,12 @@ the shared contract-first loop in `../backend/docs/DELIVERY_WORKFLOW.md`.
 - [x] `done` Resolve Airtel Money and TNM Mpamba from the payer prefix, keep
       alternate-number entry explicit, and provide readable copy-confirmed
       bank instructions.
+- [x] `done` Display PayChangu's fee-inclusive bank-transfer amount and keep
+      pending-payment completion feedback independent of Material scaffolds.
+- [x] `done` Show the selected subscription amount directly in the payment
+      method sheet before mobile-money and bank-transfer selection.
+- [x] `done` Route saved and alternate mobile-money payer numbers through one
+      editable confirmation field, network resolver, and submission path.
 - [ ] `pending` Handle publication updates as hints and reconcile through REST
       when sockets or push are introduced.
 - [ ] `pending` Pass the shared publish-and-read journey with backend/dashboard.

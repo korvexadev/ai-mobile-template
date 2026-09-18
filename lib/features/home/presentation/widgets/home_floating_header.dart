@@ -27,8 +27,8 @@ class HomeFloatingHeader extends StatelessWidget {
         //   begin: Alignment.topCenter,
         //   end: Alignment.bottomCenter,
         //   colors: [
-        //     AppTheme.paper.withValues(alpha: surfaceOpacity),
-        //     AppTheme.paper.withValues(alpha: surfaceOpacity * 0.92),
+        //     AppTheme.paperOf(context).withValues(alpha: surfaceOpacity),
+        //     AppTheme.paperOf(context).withValues(alpha: surfaceOpacity * 0.92),
         //   ],
         // ),
       ),
@@ -57,7 +57,7 @@ class HomeFloatingHeader extends StatelessWidget {
                 _FloatingHeaderAction(
                   label: 'Notifications',
                   icon: HugeIconsStrokeRounded.notification02,
-                  showBadge: true,
+                  showBadge: false,
                   onPressed: onNotifications,
                 ),
               ],
@@ -89,9 +89,9 @@ class _FloatingHeaderAction extends StatelessWidget {
       button: true,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: AppTheme.white.withValues(alpha: 0.92),
+          color: AppTheme.surfaceOf(context).withValues(alpha: 0.92),
           shape: BoxShape.circle,
-          border: Border.all(color: AppTheme.border),
+          border: Border.all(color: AppTheme.borderOf(context)),
           boxShadow: [
             BoxShadow(
               color: CupertinoColors.black.withValues(alpha: 0.08),

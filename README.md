@@ -57,7 +57,9 @@ process ends, but is never written to local storage.
   Android and Cupertino on iOS.
 - The shell contains the backend-configured editorial homepage, authenticated
   slug-based article reading, a local Saved feed, and the reader profile and
-  settings destination. Latest remains a placeholder.
+  settings destination. Latest remains a placeholder until a backend feed exists.
+- Appearance follows the device by default. Profile → Appearance can persist
+  a Light or Dark choice locally.
 
 ## API address
 
@@ -85,8 +87,11 @@ Quality gates:
 /Volumes/Dev/Flutter/flutter/bin/flutter test
 ```
 
-All product data uses versioned REST endpoints. Real-time updates use the
-central authenticated socket client when a feature requires them.
+All product data uses versioned REST endpoints. There is currently no deployed
+reader socket endpoint or event catalog. Pending payments reconcile through
+REST while visible, and an article read refreshes the REST-owned allowance.
+Reader notification delivery and preferences are awaiting backend contracts;
+the available notification endpoints are administrator drafts only.
 
 Most visible copy is selectable through route-level selection regions. The
 adaptive app supplies both Cupertino and Material localization delegates so

@@ -6,6 +6,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:hugeicons/styles/stroke_rounded.dart';
 
 import '../../../app/theme/app_theme.dart';
+import '../../../app/theme/theme_mode_controller.dart';
 import '../../../shared/design_system/app_spacing.dart';
 import '../../articles/application/saved_articles_controller.dart';
 import '../../auth/application/auth_controller.dart';
@@ -25,6 +26,45 @@ class ProfilePage extends ConsumerStatefulWidget {
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
   bool _isSigningOut = false;
+
+  Future<void> _chooseAppearance() async {
+    final selected = await showAdaptiveDialog<ThemeMode>(
+      context: context,
+      builder: (context) => AlertDialog.adaptive(
+        title: const Text('Appearance'),
+        content: const Text('Choose how Mikozi looks on this device.'),
+        actions: [
+          for (final mode in ThemeMode.values)
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(mode),
+              child: Text(switch (mode) {
+                ThemeMode.system => 'System',
+                ThemeMode.light => 'Light',
+                ThemeMode.dark => 'Dark',
+              }),
+            ),
+        ],
+      ),
+    );
+    if (selected == null || !mounted) return;
+    try {
+      await ref.read(appThemeModeProvider.notifier).select(selected);
+    } on Object {
+      if (!mounted) return;
+      await showAdaptiveDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog.adaptive(
+          content: const Text('Appearance could not be saved. Try again.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   Future<void> _signOut() async {
     final confirmed = await showAdaptiveDialog<bool>(
@@ -84,6 +124,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final savedCount = ref.watch(savedArticlesControllerProvider).value?.length;
     final entitlement = ref.watch(readerEntitlementProvider);
     final appVersion = ref.watch(appVersionProvider);
+    final appearance =
+        ref.watch(appThemeModeProvider).value ?? ThemeMode.system;
     return ProfileContent(
       profile: profile,
       savedCount: savedCount,
@@ -93,6 +135,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       signingOut: _isSigningOut,
       onOpenSaved: widget.onOpenSaved,
       onOpenNotifications: () => context.push('/settings/notifications'),
+      appearance: appearance,
+      onOpenAppearance: _chooseAppearance,
       onOpenSubscription: () => context.push('/settings/subscription'),
       onOpenTransactions: () => context.push('/settings/transactions'),
       onOpenPrivacy: () => context.push('/settings/privacy'),
@@ -113,6 +157,8 @@ class ProfileContent extends StatelessWidget {
     required this.signingOut,
     required this.onOpenSaved,
     required this.onOpenNotifications,
+    this.appearance = ThemeMode.system,
+    this.onOpenAppearance,
     required this.onOpenSubscription,
     required this.onOpenTransactions,
     required this.onOpenPrivacy,
@@ -130,6 +176,8 @@ class ProfileContent extends StatelessWidget {
   final bool signingOut;
   final VoidCallback onOpenSaved;
   final VoidCallback onOpenNotifications;
+  final ThemeMode appearance;
+  final VoidCallback? onOpenAppearance;
   final VoidCallback onOpenSubscription;
   final VoidCallback onOpenTransactions;
   final VoidCallback onOpenPrivacy;
@@ -142,7 +190,7 @@ class ProfileContent extends StatelessWidget {
     final displayName = profile?.displayName?.trim();
     final name = displayName?.isNotEmpty == true ? displayName! : 'Reader';
     return ColoredBox(
-      color: AppTheme.softSurface,
+      color: AppTheme.softSurfaceOf(context),
       child: SafeArea(
         bottom: false,
         child: CustomScrollView(
@@ -212,10 +260,15 @@ class ProfileContent extends StatelessWidget {
                               label: 'Notifications',
                               onPressed: onOpenNotifications,
                             ),
-                            const _ProfileRow(
+                            _ProfileRow(
                               icon: HugeIconsStrokeRounded.sun01,
                               label: 'Appearance',
-                              value: 'Light',
+                              value: switch (appearance) {
+                                ThemeMode.system => 'System',
+                                ThemeMode.light => 'Light',
+                                ThemeMode.dark => 'Dark',
+                              },
+                              onPressed: onOpenAppearance,
                             ),
                             _ProfileRow(
                               icon: HugeIconsStrokeRounded.languageCircle,
@@ -259,7 +312,7 @@ class ProfileContent extends StatelessWidget {
                           'Mikozi ${appVersion ?? '—'}',
                           key: const ValueKey('profile-app-version'),
                           style: Theme.of(context).textTheme.labelMedium
-                              ?.copyWith(color: AppTheme.muted),
+                              ?.copyWith(color: AppTheme.mutedOf(context)),
                         ),
                       ],
                     ),
@@ -288,7 +341,7 @@ class _Identity extends StatelessWidget {
           width: 96,
           height: 96,
           alignment: Alignment.center,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: Color(0xFFFFE5E7),
             shape: BoxShape.circle,
           ),
@@ -314,7 +367,7 @@ class _Identity extends StatelessWidget {
             textAlign: TextAlign.center,
             style: Theme.of(
               context,
-            ).textTheme.bodyMedium?.copyWith(color: AppTheme.muted),
+            ).textTheme.bodyMedium?.copyWith(color: AppTheme.mutedOf(context)),
           ),
         ],
       ],
@@ -335,9 +388,17 @@ class _AllowanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final read = entitlement?.articlesReadToday;
-    final value = read?.toString() ?? '—';
-    final label = read == 1 ? 'story read today' : 'stories read today';
+    final freeReading = entitlement?.globalFreeAccess ?? false;
+    final count = freeReading
+        ? entitlement?.articlesReadToday
+        : entitlement?.articlesRemainingToday;
+    final value = count?.toString() ?? (entitlement == null ? '—' : '∞');
+    final label = switch ((freeReading, count)) {
+      (true, 1) => 'story read today',
+      (true, _) => 'stories read today',
+      (false, 1) => 'story remaining today',
+      (false, _) => 'stories remaining today',
+    };
     return Semantics(
       button: onPressed != null,
       label: '$value $label',
@@ -408,7 +469,7 @@ class _GroupLabel extends StatelessWidget {
         child: Text(
           label,
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: AppTheme.muted,
+            color: AppTheme.mutedOf(context),
             fontWeight: FontWeight.w800,
             letterSpacing: 1,
           ),
@@ -428,13 +489,17 @@ class _SettingsGroup extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
       child: ColoredBox(
-        color: AppTheme.white,
+        color: AppTheme.surfaceOf(context),
         child: Column(
           children: [
             for (var index = 0; index < children.length; index++) ...[
               children[index],
               if (index != children.length - 1)
-                const Divider(height: 1, indent: 60, color: AppTheme.border),
+                Divider(
+                  height: 1,
+                  indent: 60,
+                  color: AppTheme.borderOf(context),
+                ),
             ],
           ],
         ),
@@ -462,7 +527,9 @@ class _ProfileRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final foreground = destructive ? AppTheme.brandRed : AppTheme.ink;
+    final foreground = destructive
+        ? AppTheme.brandRed
+        : AppTheme.inkOf(context);
     final content = SizedBox(
       height: 60,
       child: Padding(
@@ -494,7 +561,7 @@ class _ProfileRow extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   if (busy)
-                    const CupertinoActivityIndicator(
+                    CupertinoActivityIndicator(
                       color: AppTheme.brandRed,
                       radius: 9,
                     )
@@ -504,16 +571,16 @@ class _ProfileRow extends StatelessWidget {
                         value!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(
-                          context,
-                        ).textTheme.bodyMedium?.copyWith(color: AppTheme.muted),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppTheme.mutedOf(context),
+                        ),
                       ),
                     ),
                   if (onPressed != null && !busy) ...[
                     const SizedBox(width: AppSpacing.xs),
-                    const HugeIcon(
+                    HugeIcon(
                       icon: HugeIconsStrokeRounded.arrowRight01,
-                      color: AppTheme.muted,
+                      color: AppTheme.mutedOf(context),
                       size: 17,
                     ),
                   ],

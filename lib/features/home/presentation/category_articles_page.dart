@@ -7,6 +7,7 @@ import 'package:hugeicons/styles/stroke_rounded.dart';
 
 import '../../../app/theme/app_theme.dart';
 import '../../../shared/design_system/app_spacing.dart';
+import '../../../shared/widgets/reader_empty_state.dart';
 import '../application/category_articles_provider.dart';
 import '../domain/category_articles.dart';
 import '../domain/homepage.dart';
@@ -23,7 +24,7 @@ class CategoryArticlesPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final feed = ref.watch(categoryArticlesControllerProvider(categorySlug));
     return ColoredBox(
-      color: AppTheme.paper,
+      color: AppTheme.paperOf(context),
       child: Stack(
         children: [
           Positioned.fill(
@@ -105,7 +106,7 @@ class _CategoryFeed extends StatelessWidget {
     final safeTop = MediaQuery.paddingOf(context).top;
     return RefreshIndicator.adaptive(
       color: AppTheme.brandRed,
-      backgroundColor: AppTheme.paper,
+      backgroundColor: AppTheme.paperOf(context),
       edgeOffset: safeTop + 42,
       displacement: safeTop + 62,
       onRefresh: onRefresh,
@@ -130,7 +131,11 @@ class _CategoryFeed extends StatelessWidget {
           if (feed.items.isEmpty)
             const SliverFillRemaining(
               hasScrollBody: false,
-              child: Center(child: Text('No articles yet.')),
+              child: ReaderEmptyState(
+                icon: HugeIconsStrokeRounded.news01,
+                title: 'No stories in this category',
+                message: 'Check back when new stories are published.',
+              ),
             )
           else
             SliverPadding(
@@ -241,9 +246,9 @@ class _BackAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppTheme.white.withValues(alpha: 0.94),
+        color: AppTheme.surfaceOf(context).withValues(alpha: 0.94),
         shape: BoxShape.circle,
-        border: Border.all(color: AppTheme.border),
+        border: Border.all(color: AppTheme.borderOf(context)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.08),
@@ -256,9 +261,9 @@ class _BackAction extends StatelessWidget {
         minimumSize: const Size.square(44),
         padding: EdgeInsets.zero,
         onPressed: onPressed,
-        child: const HugeIcon(
+        child: HugeIcon(
           icon: HugeIconsStrokeRounded.arrowLeft01,
-          color: AppTheme.ink,
+          color: AppTheme.inkOf(context),
           size: 21,
         ),
       ),

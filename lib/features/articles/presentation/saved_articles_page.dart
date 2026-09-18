@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hugeicons/hugeicons.dart';
 import 'package:hugeicons/styles/stroke_rounded.dart';
 
 import '../../../app/theme/app_theme.dart';
 import '../../../shared/design_system/app_spacing.dart';
 import '../../../shared/widgets/mikozi_cached_network_image.dart';
+import '../../../shared/widgets/reader_empty_state.dart';
 import '../../../shared/widgets/reader_page_header.dart';
 import '../application/saved_articles_controller.dart';
 import '../domain/saved_article.dart';
@@ -23,11 +23,11 @@ class SavedArticlesPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final articles = ref.watch(savedReaderArticlesProvider);
     return ColoredBox(
-      color: AppTheme.paper,
+      color: AppTheme.paperOf(context),
       child: RefreshIndicator.adaptive(
         key: const ValueKey('saved-articles-refresh'),
         color: AppTheme.brandRed,
-        backgroundColor: AppTheme.paper,
+        backgroundColor: AppTheme.paperOf(context),
         onRefresh: () => _refresh(ref),
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(
@@ -118,7 +118,7 @@ class _SavedGroupHeading extends StatelessWidget {
             label,
             key: ValueKey('saved-group-$label'),
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: AppTheme.ink,
+              color: AppTheme.inkOf(context),
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -144,7 +144,7 @@ class _SavedArticleCard extends StatelessWidget {
         onTap: onPressed,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: AppTheme.white,
+            color: AppTheme.surfaceOf(context),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Padding(
@@ -188,19 +188,21 @@ class _SavedArticleCard extends StatelessWidget {
                                     ),
                               ),
                             ),
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: AppSpacing.xxs,
                               ),
                               child: Text(
                                 '•',
-                                style: TextStyle(color: AppTheme.muted),
+                                style: TextStyle(
+                                  color: AppTheme.mutedOf(context),
+                                ),
                               ),
                             ),
                             Text(
                               _savedTime(article.savedAt),
                               style: Theme.of(context).textTheme.labelSmall
-                                  ?.copyWith(color: AppTheme.muted),
+                                  ?.copyWith(color: AppTheme.mutedOf(context)),
                             ),
                           ],
                         ),
@@ -222,7 +224,10 @@ class _SavedArticleCard extends StatelessWidget {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: AppTheme.muted, height: 1.3),
+                                ?.copyWith(
+                                  color: AppTheme.mutedOf(context),
+                                  height: 1.3,
+                                ),
                           ),
                         ],
                       ],
@@ -320,24 +325,10 @@ class _SavedEmpty extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverFillRemaining(
       hasScrollBody: false,
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const HugeIcon(
-              icon: HugeIconsStrokeRounded.bookmark02,
-              color: AppTheme.muted,
-              size: 28,
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              'No saved stories yet.',
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(color: AppTheme.muted),
-            ),
-          ],
-        ),
+      child: const ReaderEmptyState(
+        icon: HugeIconsStrokeRounded.bookmark02,
+        title: 'No saved stories yet',
+        message: 'Save an article while reading to find it here later.',
       ),
     );
   }

@@ -43,7 +43,7 @@ class _RichTextSection extends StatelessWidget {
     }
     final theme = Theme.of(context);
     final paragraph = theme.textTheme.bodyLarge?.copyWith(
-      color: AppTheme.ink,
+      color: AppTheme.inkOf(context),
       fontSize: 17,
       height: 1.72,
     );
@@ -77,35 +77,35 @@ class _RichTextSection extends StatelessWidget {
           top: AppSpacing.sm,
           bottom: AppSpacing.xs,
         ),
-        strong: const TextStyle(fontWeight: FontWeight.w700),
-        em: const TextStyle(fontStyle: FontStyle.italic),
+        strong: TextStyle(fontWeight: FontWeight.w700),
+        em: TextStyle(fontStyle: FontStyle.italic),
         blockSpacing: AppSpacing.sm,
         listIndent: AppSpacing.lg,
         listBullet: paragraph,
         blockquote: paragraph?.copyWith(
-          color: AppTheme.muted,
+          color: AppTheme.mutedOf(context),
           fontWeight: FontWeight.w600,
         ),
         blockquotePadding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
           vertical: AppSpacing.sm,
         ),
-        blockquoteDecoration: const BoxDecoration(
-          color: AppTheme.softSurface,
+        blockquoteDecoration: BoxDecoration(
+          color: AppTheme.softSurfaceOf(context),
           border: Border(left: BorderSide(color: AppTheme.brandRed, width: 3)),
         ),
         code: paragraph?.copyWith(
           fontFamily: 'monospace',
           fontSize: 14,
-          backgroundColor: AppTheme.softSurface,
+          backgroundColor: AppTheme.softSurfaceOf(context),
         ),
         codeblockPadding: const EdgeInsets.all(AppSpacing.md),
         codeblockDecoration: BoxDecoration(
-          color: AppTheme.softSurface,
+          color: AppTheme.softSurfaceOf(context),
           borderRadius: BorderRadius.circular(8),
         ),
-        horizontalRuleDecoration: const BoxDecoration(
-          border: Border(top: BorderSide(color: AppTheme.border)),
+        horizontalRuleDecoration: BoxDecoration(
+          border: Border(top: BorderSide(color: AppTheme.borderOf(context))),
         ),
       ),
     );
@@ -152,9 +152,10 @@ class _ImageSection extends StatelessWidget {
           const SizedBox(height: AppSpacing.xs),
           Text(
             caption,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: AppTheme.muted, height: 1.4),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: AppTheme.mutedOf(context),
+              height: 1.4,
+            ),
           ),
         ],
       ],
@@ -234,9 +235,10 @@ class _YoutubeSectionState extends State<_YoutubeSection> {
           const SizedBox(height: AppSpacing.xs),
           Text(
             caption,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: AppTheme.muted, height: 1.4),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: AppTheme.mutedOf(context),
+              height: 1.4,
+            ),
           ),
         ],
       ],
@@ -259,14 +261,14 @@ class _AdvertSection extends StatelessWidget {
         constraints: const BoxConstraints(minHeight: 112),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: AppTheme.softSurface,
+          color: AppTheme.softSurfaceOf(context),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppTheme.border),
+          border: Border.all(color: AppTheme.borderOf(context)),
         ),
         child: Text(
           'ADVERTISEMENT',
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: AppTheme.muted,
+            color: AppTheme.mutedOf(context),
             fontWeight: FontWeight.w700,
             letterSpacing: 1.4,
           ),

@@ -26,20 +26,23 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('News, without the noise.'), findsOneWidget);
+    expect(find.text('Access the latest and hottest news'), findsOneWidget);
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Made for reading.'), findsOneWidget);
+    expect(find.text('Made with entertainment at its core.'), findsOneWidget);
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Keep your world close.'), findsOneWidget);
+    expect(find.text('Enjoy the latest'), findsOneWidget);
     await tester.tap(find.text('Start reading'));
     await tester.pumpAndSettle();
 
     expect(repository.completed, isTrue);
-    expect(find.text('Your news,\nyour number.'), findsOneWidget);
+    expect(
+      find.text('Sign in with your phone number to get started.'),
+      findsOneWidget,
+    );
     expect(find.text('Continue'), findsOneWidget);
   });
 
@@ -60,8 +63,11 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Your news,\nyour number.'), findsOneWidget);
-    expect(find.text('News, without the noise.'), findsNothing);
+    expect(
+      find.text('Sign in with your phone number to get started.'),
+      findsOneWidget,
+    );
+    expect(find.text('Access the latest and hottest news'), findsNothing);
   });
 }
 

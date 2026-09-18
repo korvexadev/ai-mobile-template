@@ -79,12 +79,14 @@ class _SimilarArticleCard extends StatelessWidget {
                 child: AspectRatio(
                   aspectRatio: 16 / 9,
                   child: article.heroImageUrl == null
-                      ? const ColoredBox(color: AppTheme.softSurface)
+                      ? ColoredBox(color: AppTheme.softSurfaceOf(context))
                       : MikoziCachedNetworkImage(
                           url: article.heroImageUrl!,
                           fit: BoxFit.cover,
                           semanticLabel: article.title,
-                          error: const ColoredBox(color: AppTheme.softSurface),
+                          error: ColoredBox(
+                            color: AppTheme.softSurfaceOf(context),
+                          ),
                         ),
                 ),
               ),
@@ -97,7 +99,7 @@ class _SimilarArticleCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: AppTheme.muted,
+                        color: AppTheme.mutedOf(context),
                         fontWeight: FontWeight.w700,
                       ),
                     ),

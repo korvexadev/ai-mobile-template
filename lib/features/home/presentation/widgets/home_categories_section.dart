@@ -41,7 +41,7 @@ class HomeCategoriesSection extends StatelessWidget {
                       horizontal: AppSpacing.md,
                       vertical: AppSpacing.sm,
                     ),
-                    color: AppTheme.softSurface,
+                    color: AppTheme.softSurfaceOf(context),
                     borderRadius: BorderRadius.circular(
                       HomeLayout.controlRadius,
                     ),
@@ -50,7 +50,7 @@ class HomeCategoriesSection extends StatelessWidget {
                     child: Text(
                       category.name,
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: AppTheme.ink,
+                        color: AppTheme.inkOf(context),
                         fontWeight: FontWeight.w600,
                       ),
                     ),

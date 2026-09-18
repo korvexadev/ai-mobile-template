@@ -18,7 +18,9 @@ class NotificationSettingsPage extends StatelessWidget {
       title: 'Notifications',
       child: _QuietState(
         icon: HugeIconsStrokeRounded.notification02,
-        label: 'No notification preferences yet.',
+        label:
+            'Notifications are not available yet. Mikozi will offer '
+            'preferences when reader delivery is ready.',
       ),
     );
   }
@@ -84,17 +86,17 @@ class AboutPage extends ConsumerWidget {
             Text(
               'Independent stories, made for reading.',
               textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: AppTheme.muted),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: AppTheme.mutedOf(context),
+              ),
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
               'Version $version',
               key: const ValueKey('about-app-version'),
-              style: Theme.of(
-                context,
-              ).textTheme.labelMedium?.copyWith(color: AppTheme.muted),
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: AppTheme.mutedOf(context),
+              ),
             ),
           ],
         ),
@@ -138,9 +140,9 @@ class _SettingsPage extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         minimumSize: const Size(44, 44),
                         onPressed: () => context.pop(),
-                        child: const HugeIcon(
+                        child: HugeIcon(
                           icon: HugeIconsStrokeRounded.arrowLeft01,
-                          color: AppTheme.ink,
+                          color: AppTheme.inkOf(context),
                           size: 22,
                         ),
                       ),
@@ -179,7 +181,7 @@ class _SettingsPage extends StatelessWidget {
         const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxl)),
       ],
     );
-    return ColoredBox(color: AppTheme.paper, child: content);
+    return ColoredBox(color: AppTheme.paperOf(context), child: content);
   }
 }
 
@@ -225,14 +227,14 @@ class _QuietState extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          HugeIcon(icon: icon, color: AppTheme.muted, size: 28),
+          HugeIcon(icon: icon, color: AppTheme.mutedOf(context), size: 28),
           const SizedBox(height: AppSpacing.sm),
           Text(
             label,
             textAlign: TextAlign.center,
             style: Theme.of(
               context,
-            ).textTheme.bodyMedium?.copyWith(color: AppTheme.muted),
+            ).textTheme.bodyMedium?.copyWith(color: AppTheme.mutedOf(context)),
           ),
         ],
       ),

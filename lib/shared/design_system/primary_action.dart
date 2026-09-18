@@ -25,7 +25,9 @@ class PrimaryAction extends StatelessWidget {
   Widget build(BuildContext context) {
     final canPress = enabled && onPressed != null;
     final visuallyActive = canPress || loading;
-    final foreground = visuallyActive ? AppTheme.white : AppTheme.muted;
+    final foreground = visuallyActive
+        ? AppTheme.white
+        : AppTheme.mutedOf(context);
 
     return SizedBox(
       height: AppSpacing.actionHeight,
@@ -38,7 +40,7 @@ class PrimaryAction extends StatelessWidget {
           child: CupertinoButton(
             padding: EdgeInsets.zero,
             color: AppTheme.brandRed,
-            disabledColor: AppTheme.border,
+            disabledColor: AppTheme.borderOf(context),
             borderRadius: BorderRadius.circular(14),
             pressedOpacity: 0.72,
             onPressed: visuallyActive ? onPressed ?? _ignorePress : null,
@@ -46,7 +48,7 @@ class PrimaryAction extends StatelessWidget {
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const CupertinoActivityIndicator(
+                      CupertinoActivityIndicator(
                         key: ValueKey('primary-action-progress'),
                         color: AppTheme.white,
                         radius: 9,

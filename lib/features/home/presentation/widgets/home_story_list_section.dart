@@ -74,7 +74,7 @@ class _CompactStoryCard extends StatelessWidget {
           height: HomeLayout.listCardHeight,
           padding: const EdgeInsets.all(AppSpacing.sm),
           decoration: BoxDecoration(
-            color: AppTheme.softSurface,
+            color: AppTheme.softSurfaceOf(context),
             borderRadius: BorderRadius.circular(HomeLayout.cardRadius),
           ),
           child: Row(
@@ -95,9 +95,9 @@ class _CompactStoryCard extends StatelessWidget {
                     Row(
                       children: [
                         Expanded(child: HomeArticleMeta(article: article)),
-                        const HugeIcon(
+                        HugeIcon(
                           icon: HugeIconsStrokeRounded.moreVertical,
-                          color: AppTheme.muted,
+                          color: AppTheme.mutedOf(context),
                           size: 18,
                         ),
                       ],
@@ -119,7 +119,7 @@ class _CompactStoryCard extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppTheme.muted,
+                          color: AppTheme.mutedOf(context),
                           height: 1.3,
                         ),
                       ),

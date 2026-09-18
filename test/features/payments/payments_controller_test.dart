@@ -88,6 +88,33 @@ void main() {
       'MOBILE_MONEY_NETWORK_MISMATCH',
     );
   });
+
+  test(
+    'unexpected verification failure exits progress and can retry',
+    () async {
+      final repository = _PaymentRepository()..failNextVerification = true;
+      final container = ProviderContainer(
+        overrides: [paymentRepositoryProvider.overrideWithValue(repository)],
+      );
+      addTearDown(container.dispose);
+      await container.read(paymentsControllerProvider.future);
+      final controller = container.read(paymentsControllerProvider.notifier);
+      await controller.initiateMobileMoney(
+        plan: _plan,
+        operator: _operator,
+        phoneNumber: '0991 234 567',
+      );
+
+      expect(await controller.verifyPending(), isNull);
+      final failed = container.read(paymentsControllerProvider).value!;
+      expect(failed.processing, isFalse);
+      expect(failed.failure?.code, 'PAYMENT_UNAVAILABLE');
+      expect(failed.pending?.id, _pending.id);
+
+      expect((await controller.verifyPending())?.id, _pending.id);
+      expect(container.read(paymentsControllerProvider).value?.failure, isNull);
+    },
+  );
 }
 
 const _plan = PaymentPlan(
@@ -122,6 +149,7 @@ final _pending = PaymentTransaction(
 class _PaymentRepository implements PaymentRepository {
   int initiations = 0;
   String? lastPhoneNumber;
+  bool failNextVerification = false;
 
   @override
   Future<List<PaymentPlan>> listPlans() async => const [_plan];
@@ -155,5 +183,11 @@ class _PaymentRepository implements PaymentRepository {
   }) => throw UnimplementedError();
 
   @override
-  Future<PaymentTransaction> verify(String transactionId) async => _pending;
+  Future<PaymentTransaction> verify(String transactionId) async {
+    if (failNextVerification) {
+      failNextVerification = false;
+      throw StateError('temporary failure');
+    }
+    return _pending;
+  }
 }

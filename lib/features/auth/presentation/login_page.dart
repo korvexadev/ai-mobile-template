@@ -44,8 +44,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final busy = value?.isBusy ?? true;
     final requestingOtp = value?.stage == AuthStage.requestingOtp;
     return AuthPageFrame(
-      title: 'Your news,\nyour number.',
-      subtitle: 'Sign in with your Malawi phone number.',
+      title: 'Login',
+      subtitle: 'Sign in with your phone number to get started.',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

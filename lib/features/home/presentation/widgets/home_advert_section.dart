@@ -20,13 +20,13 @@ class HomeAdvertSection extends StatelessWidget {
         constraints: const BoxConstraints(minHeight: 92),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: AppTheme.softSurface,
+          color: AppTheme.softSurfaceOf(context),
           borderRadius: BorderRadius.circular(HomeLayout.cardRadius),
         ),
         child: Text(
           'ADVERTISEMENT',
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: AppTheme.muted,
+            color: AppTheme.mutedOf(context),
             fontWeight: FontWeight.w700,
             letterSpacing: 1.1,
           ),

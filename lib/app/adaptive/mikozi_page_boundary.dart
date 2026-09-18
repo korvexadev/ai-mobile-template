@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
@@ -13,9 +14,16 @@ class MikoziPageBoundary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).platform == TargetPlatform.iOS
+        ? CupertinoTheme.of(context).brightness ?? Brightness.light
+        : Theme.of(context).brightness;
     return Theme(
-      data: AppTheme.light.copyWith(platform: Theme.of(context).platform),
-      child: Material(type: MaterialType.transparency, child: child),
+      data: (brightness == Brightness.dark ? AppTheme.dark : AppTheme.light)
+          .copyWith(platform: Theme.of(context).platform),
+      child: Material(
+        type: MaterialType.transparency,
+        child: SelectionArea(child: child),
+      ),
     );
   }
 }

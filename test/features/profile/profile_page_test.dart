@@ -53,8 +53,10 @@ void main() {
     expect(find.text('MR'), findsOneWidget);
     expect(find.text('Mikozi Reader'), findsOneWidget);
     expect(find.text('+265991234567'), findsOneWidget);
-    expect(find.text('4'), findsOneWidget);
-    expect(find.text('stories read today'), findsOneWidget);
+    expect(find.text('6'), findsOneWidget);
+    expect(find.text('stories remaining today'), findsOneWidget);
+    expect(find.text('4'), findsNothing);
+    expect(find.text('stories read today'), findsNothing);
     expect(find.text('Reader Plus'), findsNWidgets(2));
     expect(find.text('Notifications'), findsOneWidget);
     expect(find.text('Subscription'), findsOneWidget);
@@ -63,7 +65,7 @@ void main() {
     expect(find.text('Language'), findsOneWidget);
     expect(find.text('English'), findsOneWidget);
     expect(find.text('Appearance'), findsOneWidget);
-    expect(find.text('Light'), findsOneWidget);
+    expect(find.text('System'), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('profile-daily-allowance')));
     expect(openedSubscription, isTrue);
@@ -121,6 +123,7 @@ void main() {
     expect(find.text('Free'), findsOneWidget);
     expect(find.text('3'), findsOneWidget);
     expect(find.text('stories read today'), findsOneWidget);
+    expect(find.text('stories remaining today'), findsNothing);
     expect(find.text('Subscription'), findsNothing);
     expect(find.text('Transactions'), findsNothing);
   });

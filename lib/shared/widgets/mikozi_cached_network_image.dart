@@ -66,12 +66,12 @@ class _ReaderImageFallback extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: AppTheme.softSurface,
+      color: AppTheme.softSurfaceOf(context),
       child: showIcon
-          ? const Center(
+          ? Center(
               child: HugeIcon(
                 icon: HugeIconsStrokeRounded.imageNotFound01,
-                color: AppTheme.muted,
+                color: AppTheme.mutedOf(context),
                 size: 28,
               ),
             )

@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/networking/mikozi_api_client.dart';
 import '../../../core/networking/network_providers.dart';
 import '../../auth/application/auth_controller.dart';
+import '../../profile/application/reader_entitlement_provider.dart';
 import '../data/remote_reader_article_repository.dart';
 import '../domain/reader_article.dart';
 import '../domain/reader_article_repository.dart';
@@ -23,8 +24,14 @@ ReaderArticleRepository readerArticleRepository(Ref ref) {
 }
 
 @Riverpod(retry: _noRetry)
-Future<ReaderArticle> readerArticle(Ref ref, String slug) {
-  return ref.watch(readerArticleRepositoryProvider).readBySlug(slug);
+Future<ReaderArticle> readerArticle(Ref ref, String slug) async {
+  final article = await ref
+      .watch(readerArticleRepositoryProvider)
+      .readBySlug(slug);
+  // The authenticated reader endpoint consumes the daily allowance. Fetch the
+  // backend-owned balance again before Profile or the paywall displays it.
+  if (ref.mounted) ref.invalidate(readerEntitlementProvider);
+  return article;
 }
 
 Duration? _noRetry(int retryCount, Object error) => null;

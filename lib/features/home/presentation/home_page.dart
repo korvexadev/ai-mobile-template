@@ -66,7 +66,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     final homepage = ref.watch(homepageProvider);
     final selectedTabId = ref.watch(homeCategorySelectionProvider);
     return ColoredBox(
-      color: AppTheme.paper,
+      color: AppTheme.paperOf(context),
       child: Stack(
         children: [
           Positioned.fill(
@@ -110,7 +110,8 @@ class _HomePageState extends ConsumerState<HomePage> {
               builder: (context, opacity, child) {
                 return HomeFloatingHeader(
                   onSearch: () {},
-                  onNotifications: () {},
+                  onNotifications: () =>
+                      context.push('/settings/notifications'),
                   surfaceOpacity: opacity,
                 );
               },
@@ -251,7 +252,7 @@ class _AdaptiveRefreshScrollView extends StatelessWidget {
     return RefreshIndicator.adaptive(
       key: const ValueKey('home-adaptive-refresh-control'),
       color: AppTheme.brandRed,
-      backgroundColor: AppTheme.paper,
+      backgroundColor: AppTheme.paperOf(context),
       edgeOffset: safeTop + 50,
       displacement: safeTop + 70,
       onRefresh: onRefresh,

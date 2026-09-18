@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../core/networking/mikozi_api_client.dart';
 import '../domain/payment.dart';
@@ -192,13 +193,33 @@ class RemotePaymentRepository implements PaymentRepository {
         final code = error['code'];
         final message = error['message'];
         if (code is String && message is String) {
+          _logFailure(
+            statusCode: exception.response?.statusCode,
+            code: code,
+            details: error['details'],
+          );
           return PaymentFailure(code: code, message: message);
         }
       }
     }
+    _logFailure(statusCode: exception.response?.statusCode);
     return const PaymentFailure(
       code: 'PAYMENT_UNAVAILABLE',
       message: 'Payments are unavailable. Check your connection and try again.',
+    );
+  }
+
+  void _logFailure({int? statusCode, String? code, Object? details}) {
+    if (!kDebugMode) return;
+    final safeDetails = switch (details) {
+      List<dynamic> values => values.whereType<String>().take(12).join(' | '),
+      _ => null,
+    };
+    debugPrint(
+      '[Payments] request failed '
+      'status=${statusCode ?? 'network'} '
+      'code=${code ?? 'PAYMENT_UNAVAILABLE'}'
+      '${safeDetails == null || safeDetails.isEmpty ? '' : ' fields=$safeDetails'}',
     );
   }
 }

@@ -51,6 +51,18 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('notifications explain the current delivery status', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(home: NotificationSettingsPage()),
+    );
+
+    expect(find.text('Notifications'), findsOneWidget);
+    expect(find.textContaining('not available yet'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('subscription controls render under the Cupertino app host', (
     tester,
   ) async {

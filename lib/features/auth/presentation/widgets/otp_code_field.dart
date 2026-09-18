@@ -115,10 +115,12 @@ class _CodeCells extends StatelessWidget {
               height: 58,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: AppTheme.white,
+                color: AppTheme.surfaceOf(context),
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                  color: selected ? AppTheme.brandRed : AppTheme.border,
+                  color: selected
+                      ? AppTheme.brandRed
+                      : AppTheme.borderOf(context),
                   width: selected ? 1.5 : 1,
                 ),
               ),

@@ -18,7 +18,7 @@ class SplashPage extends ConsumerWidget {
 
     return AdaptiveScaffold(
       body: ColoredBox(
-        color: AppTheme.paper,
+        color: AppTheme.paperOf(context),
         child: SafeArea(
           child: Stack(
             fit: StackFit.expand,

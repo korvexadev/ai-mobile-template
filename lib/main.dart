@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app/router/app_router.dart';
 import 'app/theme/app_theme.dart';
+import 'app/theme/theme_mode_controller.dart';
 
 const mikoziLocalizationsDelegates = <LocalizationsDelegate<dynamic>>[
   DefaultMaterialLocalizations.delegate,
@@ -21,11 +22,13 @@ class MikoziApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(appThemeModeProvider).value ?? ThemeMode.system;
     return AdaptiveApp.router(
       title: 'Mikozi',
-      themeMode: ThemeMode.light,
+      themeMode: themeMode,
       localizationsDelegates: mikoziLocalizationsDelegates,
       materialLightTheme: AppTheme.light,
+      materialDarkTheme: AppTheme.dark,
       cupertinoLightTheme: const CupertinoThemeData(
         brightness: Brightness.light,
         primaryColor: AppTheme.brandRed,
@@ -65,6 +68,37 @@ class MikoziApp extends ConsumerWidget {
             color: AppTheme.brandRed,
             fontFamily: 'Manrope',
             fontSize: 16,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+      cupertinoDarkTheme: const CupertinoThemeData(
+        brightness: Brightness.dark,
+        primaryColor: Color(0xFFFF7780),
+        scaffoldBackgroundColor: AppTheme.darkPaper,
+        barBackgroundColor: AppTheme.darkPaper,
+        textTheme: CupertinoTextThemeData(
+          textStyle: TextStyle(
+            color: AppTheme.darkInk,
+            fontFamily: 'Manrope',
+            fontSize: 15,
+          ),
+          actionTextStyle: TextStyle(
+            color: Color(0xFFFF7780),
+            fontFamily: 'Manrope',
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+          ),
+          tabLabelTextStyle: TextStyle(
+            color: AppTheme.darkInk,
+            fontFamily: 'Manrope',
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+          ),
+          navTitleTextStyle: TextStyle(
+            color: AppTheme.darkInk,
+            fontFamily: 'Manrope',
+            fontSize: 17,
             fontWeight: FontWeight.w700,
           ),
         ),

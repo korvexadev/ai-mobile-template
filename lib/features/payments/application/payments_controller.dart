@@ -197,6 +197,17 @@ class PaymentsController extends _$PaymentsController {
     } on PaymentFailure catch (failure) {
       state = AsyncData(current.copyWith(processing: false, failure: failure));
       return null;
+    } on Object {
+      state = AsyncData(
+        current.copyWith(
+          processing: false,
+          failure: const PaymentFailure(
+            code: 'PAYMENT_UNAVAILABLE',
+            message: 'The payment status could not be checked. Try again.',
+          ),
+        ),
+      );
+      return null;
     }
   }
 

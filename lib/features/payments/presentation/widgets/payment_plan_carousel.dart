@@ -107,7 +107,7 @@ class _PlanCard extends StatelessWidget {
       opacity: disabled && !busy ? 0.52 : 1,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: AppTheme.ink,
+          color: AppTheme.inkOf(context),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Padding(
@@ -119,22 +119,22 @@ class _PlanCard extends StatelessWidget {
                 plan.name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(color: AppTheme.white),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: AppTheme.surfaceOf(context),
+                ),
               ),
               const SizedBox(height: AppSpacing.xs),
               Text(
                 allowance,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppTheme.white.withValues(alpha: 0.72),
+                  color: AppTheme.surfaceOf(context).withValues(alpha: 0.72),
                 ),
               ),
               const Spacer(),
               Text(
                 _price(plan),
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: AppTheme.white,
+                  color: AppTheme.surfaceOf(context),
                   fontWeight: FontWeight.w800,
                 ),
               ),

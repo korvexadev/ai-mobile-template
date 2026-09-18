@@ -4,6 +4,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:hugeicons/styles/stroke_rounded.dart';
 import '../../../../app/theme/app_theme.dart';
 import '../../../../shared/design_system/app_spacing.dart';
+import '../../../../shared/widgets/reader_empty_state.dart';
 
 import '../home_layout.dart';
 
@@ -25,7 +26,7 @@ class HomepageSkeleton extends StatelessWidget {
         SizedBox(
           height: HomeLayout.leadCardHeight,
           child: DecoratedBox(
-            decoration: _skeleton(radius: HomeLayout.cardRadius),
+            decoration: _skeleton(context, radius: HomeLayout.cardRadius),
           ),
         ),
         const SizedBox(height: AppSpacing.md),
@@ -35,19 +36,28 @@ class HomepageSkeleton extends StatelessWidget {
             children: [
               Expanded(
                 child: DecoratedBox(
-                  decoration: _skeleton(radius: HomeLayout.controlRadius),
+                  decoration: _skeleton(
+                    context,
+                    radius: HomeLayout.controlRadius,
+                  ),
                 ),
               ),
               const SizedBox(width: AppSpacing.xs),
               Expanded(
                 child: DecoratedBox(
-                  decoration: _skeleton(radius: HomeLayout.controlRadius),
+                  decoration: _skeleton(
+                    context,
+                    radius: HomeLayout.controlRadius,
+                  ),
                 ),
               ),
               const SizedBox(width: AppSpacing.xs),
               Expanded(
                 child: DecoratedBox(
-                  decoration: _skeleton(radius: HomeLayout.controlRadius),
+                  decoration: _skeleton(
+                    context,
+                    radius: HomeLayout.controlRadius,
+                  ),
                 ),
               ),
             ],
@@ -58,7 +68,7 @@ class HomepageSkeleton extends StatelessWidget {
           SizedBox(
             height: HomeLayout.listCardHeight,
             child: DecoratedBox(
-              decoration: _skeleton(radius: HomeLayout.cardRadius),
+              decoration: _skeleton(context, radius: HomeLayout.cardRadius),
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -67,9 +77,9 @@ class HomepageSkeleton extends StatelessWidget {
     );
   }
 
-  BoxDecoration _skeleton({required double radius}) {
+  BoxDecoration _skeleton(BuildContext context, {required double radius}) {
     return BoxDecoration(
-      color: AppTheme.softSurface,
+      color: AppTheme.softSurfaceOf(context),
       borderRadius: BorderRadius.circular(radius),
     );
   }
@@ -98,9 +108,9 @@ class HomepageError extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const HugeIcon(
+            HugeIcon(
               icon: HugeIconsStrokeRounded.cloudOff,
-              color: AppTheme.muted,
+              color: AppTheme.mutedOf(context),
               size: 38,
             ),
             const SizedBox(height: AppSpacing.md),
@@ -132,15 +142,10 @@ class EmptyHomepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(HomeLayout.horizontalPadding),
-        child: Text(
-          message,
-          textAlign: TextAlign.center,
-          style: Theme.of(
-            context,
-          ).textTheme.bodyLarge?.copyWith(color: AppTheme.muted),
-        ),
+      child: ReaderEmptyState(
+        icon: HugeIconsStrokeRounded.news01,
+        title: 'No stories here yet',
+        message: message,
       ),
     );
   }

@@ -47,7 +47,7 @@ class _FrontPageArtwork extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const _Masthead(label: 'MIKOZI  /  TODAY'),
+        const _Masthead(label: 'This week'),
         const SizedBox(height: 16),
         Expanded(
           flex: 6,
@@ -66,7 +66,7 @@ class _FrontPageArtwork extends StatelessWidget {
                   right: 18,
                   bottom: 18,
                   child: Text(
-                    'The day,\nclearly told.',
+                    'Ichi chatentha kwambiri,\nAnthu akuchipopa',
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Newsreader',
@@ -112,7 +112,7 @@ class _ReadingArtwork extends StatelessWidget {
             const _Masthead(label: 'READING  /  06 MIN'),
             const Spacer(),
             Text(
-              'Words need\nroom to breathe.',
+              'Eni mudzi anyinyirika..',
               style: Theme.of(context).textTheme.displaySmall,
             ),
             const SizedBox(height: 20),
@@ -144,26 +144,29 @@ class _CollectionArtwork extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const _Masthead(label: 'YOUR MIKOZI'),
+        const _Masthead(label: ''),
         const SizedBox(height: 18),
         Expanded(
           child: Row(
             children: [
               const Expanded(
                 child: _CollectionCard(
-                  index: '01',
-                  title: 'Morning\nbriefing',
+                  index: '',
+                  title: 'Events today',
                   active: true,
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Expanded(
-                      child: _CollectionCard(
-                        index: '02',
-                        title: 'Local\nstories',
+                      child: Center(
+                        child: _CollectionCard(
+                          index: '',
+                          title: 'Ladies night out party',
+                        ),
                       ),
                     ),
                     const SizedBox(height: 12),

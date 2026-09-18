@@ -16,7 +16,7 @@ class HomeArticleMeta extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = onDark
         ? Colors.white.withValues(alpha: 0.82)
-        : AppTheme.muted;
+        : AppTheme.mutedOf(context);
     return Text(
       _label(article),
       maxLines: 1,

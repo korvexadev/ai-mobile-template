@@ -16,9 +16,22 @@ class RemoteAuthRepository implements AuthRepository {
   final AuthApi _api;
   final AuthSessionStore _sessionStore;
   final DateTime Function() _clock;
+  Future<AuthSession?>? _restoreInFlight;
 
   @override
-  Future<AuthSession?> restore() async {
+  Future<AuthSession?> restore() {
+    final active = _restoreInFlight;
+    if (active != null) return active;
+    final operation = _restore();
+    _restoreInFlight = operation;
+    return operation.whenComplete(() {
+      if (identical(_restoreInFlight, operation)) {
+        _restoreInFlight = null;
+      }
+    });
+  }
+
+  Future<AuthSession?> _restore() async {
     final session = await _sessionStore.read();
     if (session == null) {
       return null;

@@ -66,7 +66,7 @@ void main() {
     await tester.tap(find.text('Latest'));
     await tester.pumpAndSettle();
 
-    expect(find.text('No latest stories yet.'), findsOneWidget);
+    expect(find.text('The Latest feed is coming soon.'), findsOneWidget);
   });
 
   testWidgets('phone entry fits a narrow scaled viewport', (tester) async {

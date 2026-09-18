@@ -12,20 +12,51 @@ import 'package:mikozi_mobile/features/payments/presentation/payment_pages.dart'
 import '../../support/fake_auth_repository.dart';
 
 void main() {
-  testWidgets('uses registered Airtel number and reveals TNM alternate entry', (
+  testWidgets('submits the saved number through the editable phone entry', (
     tester,
   ) async {
-    await tester.pumpWidget(_fixture());
+    final repository = _PaymentRepository();
+    await tester.pumpWidget(_fixture(repository));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Open payment'));
     await tester.pumpAndSettle();
 
+    expect(find.byKey(const ValueKey('payment-sheet-amount')), findsOneWidget);
+    expect(find.text('MWK 5,000'), findsOneWidget);
     expect(find.text('Airtel Money'), findsOneWidget);
     expect(find.text('+265 99 123 4567'), findsOneWidget);
     expect(find.text('Bank transfer'), findsOneWidget);
     expect(find.text('Use another number'), findsOneWidget);
     expect(find.byKey(const ValueKey('payment-phone-field')), findsNothing);
 
+    await tester.tap(find.byKey(const ValueKey('registered-mobile-money')));
+    await tester.pump();
+
+    final field = find.byKey(const ValueKey('payment-phone-field'));
+    expect(field, findsOneWidget);
+    expect(find.text('Pay with Airtel Money'), findsOneWidget);
+    expect(
+      tester
+          .widget<EditableText>(
+            find.descendant(of: field, matching: find.byType(EditableText)),
+          )
+          .controller
+          .text,
+      '265991234567',
+    );
+
+    await tester.tap(find.text('Pay with Airtel Money'));
+    await tester.pumpAndSettle();
+
+    expect(repository.submittedPhoneNumber, '265991234567');
+    expect(repository.submittedOperatorId, 'airtel');
+  });
+
+  testWidgets('reveals an empty entry for another number', (tester) async {
+    await tester.pumpWidget(_fixture(_PaymentRepository()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Open payment'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Use another number'));
     await tester.pump();
     await tester.enterText(
@@ -40,13 +71,14 @@ void main() {
   testWidgets('copies readable bank details and confirms the action', (
     tester,
   ) async {
-    await tester.pumpWidget(_fixture());
+    await tester.pumpWidget(_fixture(_PaymentRepository()));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Open payment'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Bank transfer'));
     await tester.pumpAndSettle();
 
+    expect(find.text('MWK 5,000'), findsOneWidget);
     expect(find.text('1234567890'), findsOneWidget);
     final value = tester.widget<SelectableText>(
       find.widgetWithText(SelectableText, '1234567890'),
@@ -64,7 +96,7 @@ void main() {
   testWidgets('uses the adaptive phone input on iOS', (tester) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
     try {
-      await tester.pumpWidget(_fixture());
+      await tester.pumpWidget(_fixture(_PaymentRepository()));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Open payment'));
       await tester.pumpAndSettle();
@@ -79,13 +111,13 @@ void main() {
   });
 }
 
-Widget _fixture() {
+Widget _fixture(_PaymentRepository repository) {
   return ProviderScope(
     overrides: [
       authRepositoryProvider.overrideWithValue(
         FakeAuthRepository(restoredSession: session(displayName: 'Reader')),
       ),
-      paymentRepositoryProvider.overrideWithValue(const _PaymentRepository()),
+      paymentRepositoryProvider.overrideWithValue(repository),
     ],
     child: MaterialApp(
       home: Scaffold(
@@ -117,7 +149,8 @@ const _plan = PaymentPlan(
 );
 
 class _PaymentRepository implements PaymentRepository {
-  const _PaymentRepository();
+  String? submittedPhoneNumber;
+  String? submittedOperatorId;
 
   @override
   Future<List<PaymentPlan>> listPlans() async => const [_plan];
@@ -140,7 +173,11 @@ class _PaymentRepository implements PaymentRepository {
     required String operatorId,
     required String phoneNumber,
     required String idempotencyKey,
-  }) async => _transaction(bankAccount: null);
+  }) async {
+    submittedPhoneNumber = phoneNumber;
+    submittedOperatorId = operatorId;
+    return _transaction(bankAccount: null);
+  }
 
   @override
   Future<PaymentTransaction> initiateBankTransfer({
